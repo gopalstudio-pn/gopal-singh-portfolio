@@ -201,7 +201,7 @@ export const AboutSection: React.FC = () => {
               </div>
 
               {/* Portrait Image Canvas */}
-              <div className="relative overflow-hidden w-full max-w-[390px] aspect-[4/5] bg-black rounded-sm">
+              <div className="md:ml-auto relative overflow-hidden w-full max-w-[390px] aspect-[4/5] bg-black rounded-sm">
                 {/* Main Portrait */}
                 <img
                   src={aboutImg}
