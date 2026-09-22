@@ -71,7 +71,7 @@ export const HeroSection: React.FC = () => {
           muted
           loop
           playsInline
-          className="h-screen w-auto max-w-none object-contain origin-right scale-[0.72] sm:scale-[0.82] md:scale-[0.98] lg:scale-100"
+          className="h-full w-full max-w-none object-cover object-center md:h-screen md:w-auto md:object-contain md:object-right md:scale-[0.98] lg:scale-100"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
