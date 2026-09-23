@@ -13,10 +13,29 @@ interface RouteStop {
 const journey: RouteStop[] = [
   {
     id: '01',
-    year: 'CURRENT',
-    title: 'BSC. SCIENCE',
+    year: 'COMPLETED',
+    title: 'BACHELOR OF SCIENCE (B.Sc.)',
     organization: 'RRM CAMPUS, JANAKPURDHAM, NEPAL',
-    description: 'Pursuing a Bachelor of Science at RRM Campus, Janakpurdham, Nepal.',
+    description: 'Bachelor of Science completed at RRM Campus, Janakpurdham, Nepal.',
+  },
+];
+
+const certifications = [
+  {
+    title: 'GOOGLE DIGITAL MARKETING & E-COMMERCE',
+    organization: 'GOOGLE',
+  },
+  {
+    title: 'GOOGLE DATA ANALYTICS',
+    organization: 'GOOGLE',
+  },
+  {
+    title: 'GOOGLE ADS CERTIFICATION',
+    organization: 'GOOGLE',
+  },
+  {
+    title: 'DIGITAL MARKETING TRAINING',
+    organization: 'GOOGLE',
   },
 ];
 
@@ -150,6 +169,45 @@ export const ExperienceSection: React.FC = () => {
 
         </div>
       </div>
+
+          {/* Certifications */}
+          <div className="mt-20 pt-10 border-t border-[#8C6D4F]/20">
+            <div className="flex items-center space-x-4 mb-8">
+              <span
+                className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#D4AF37]"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
+                CERTIFICATIONS
+              </span>
+              <div className="w-16 h-[1px] bg-gradient-to-r from-[#D4AF37]/80 to-transparent" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6">
+              {certifications.map((cert, idx) => (
+                <motion.div
+                  key={cert.title}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.08 }}
+                  className="group border-l border-[#8C6D4F]/40 pl-5 py-1 hover:border-[#D4AF37] transition-colors"
+                >
+                  <h3
+                    className="text-lg sm:text-xl tracking-wide text-white group-hover:text-[#F7E7C4] transition-colors"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                  >
+                    {cert.title}
+                  </h3>
+                  <span
+                    className="text-[9px] tracking-[0.25em] text-[#8C6D4F]"
+                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    {cert.organization}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
     </section>
   );
 };
