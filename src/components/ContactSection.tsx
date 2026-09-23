@@ -80,6 +80,27 @@ export const ContactSection: React.FC = () => {
               >
                 GOPALSINGH.PN@GMAIL.COM ↗
               </a>
+
+              <div className="flex items-center gap-4 mt-6">
+                <a href="https://www.facebook.com/share/19Qz3uV7y6/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <img src="/facebook.png" alt="Facebook" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </a>
+                <a href="https://www.instagram.com/gopalsingh.pn?stkn=bzZrZ2pxMXZ4NTdo" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <img src="/instagram.png" alt="Instagram" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </a>
+                <a href="https://youtube.com/@gopalsingh-rr6yi" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <img src="/youtube.png" alt="YouTube" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </a>
+                <a href="https://wa.me/9779707727608" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                  <span className="w-7 h-7 flex items-center justify-center border border-[#8C6D4F]/50 text-[#D4AF37] text-[10px] font-bold opacity-70 hover:opacity-100 transition-opacity">WA</span>
+                </a>
+                <a href="https://www.tiktok.com/@gopalsingh.7" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                  <img src="/tiktok.png" alt="TikTok" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </a>
+                <a href="mailto:gopalsingh.pn@gmail.com" aria-label="Gmail">
+                  <img src="/gmail.png" alt="Gmail" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </a>
+              </div>
             </div>
           </div>
 
