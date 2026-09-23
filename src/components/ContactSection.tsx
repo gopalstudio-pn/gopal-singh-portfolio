@@ -92,7 +92,7 @@ export const ContactSection: React.FC = () => {
                   <img src="/youtube.png" alt="YouTube" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
                 <a href="https://wa.me/9779707727608" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                  <span className="w-7 h-7 flex items-center justify-center border border-[#8C6D4F]/50 text-[#D4AF37] text-[10px] font-bold opacity-70 hover:opacity-100 transition-opacity">WA</span>
+                  <img src="/whatsapp.png" alt="WhatsApp" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
                 <a href="https://www.tiktok.com/@gopalsingh.7" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
                   <img src="/tiktok.png" alt="TikTok" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
