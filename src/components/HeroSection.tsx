@@ -71,7 +71,17 @@ export const HeroSection: React.FC = () => {
           muted
           loop
           playsInline
-          className="h-full w-full max-w-none object-cover object-center md:h-screen md:w-auto md:object-contain md:object-right md:scale-[0.98] lg:scale-100"
+          className="h-full w-full max-w-none object-cover object-center md:hidden"
+        >
+          <source src="/videos/hero-mobile.mp4" type="video/mp4" />
+        </video>
+
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="hidden md:block h-screen w-auto max-w-none object-contain object-right md:scale-[0.98] lg:scale-100"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
