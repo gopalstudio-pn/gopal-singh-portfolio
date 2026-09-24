@@ -165,6 +165,15 @@ export const HeroSection: React.FC = () => {
           </a>
         </header>
 
+        {/* Mobile Navigation */}
+        <nav className="flex md:hidden items-center gap-5 overflow-x-auto whitespace-nowrap mt-5 pb-2 text-[10px] tracking-[0.22em] font-light uppercase text-[#C4B5A5]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          {navItems.map((item) => (
+            <a key={item.name} href={item.href} className="shrink-0 py-1 hover:text-[#FFF5EB] transition-colors">
+              {item.name}
+            </a>
+          ))}
+        </nav>
+
         {/* Main Hero Row */}
         <div className="relative flex flex-col md:flex-row items-center justify-between w-full pt-4 pb-2 my-auto">
           
