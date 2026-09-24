@@ -29,7 +29,7 @@ const fadeUpVariants: Variants = {
 
 const navItems = [
   { name: 'ABOUT', href: '#about' },
-  { name: 'PROJECTS', href: '#work' },
+  { name: 'BOOKS', href: '#books' },
   { name: 'SKILLS', href: '#skills' },
   { name: 'EDUCATION', href: '#experience' },
   { name: 'CONTACT', href: '#contact' },
