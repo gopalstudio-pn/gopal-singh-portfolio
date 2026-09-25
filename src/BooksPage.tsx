@@ -19,6 +19,33 @@ const books = [
     description:
       'A classic guide to building better relationships, communicating effectively, and understanding people.',
   },
+  {
+    title: 'The Lean Startup',
+    author: 'Eric Ries',
+    category: 'Business · Entrepreneurship',
+    cover: '/books/the-lean-startup.jpg',
+    pdf: '/books/the-lean-startup.pdf',
+    description:
+      'A practical approach to building businesses through experimentation, learning, and continuous improvement.',
+  },
+  {
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    category: 'Self-Development · Habits',
+    cover: '/books/atomic-habits.jpg',
+    pdf: '/books/atomic-habits.pdf',
+    description:
+      'A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.',
+  },
+  {
+    title: 'Rich Dad Poor Dad',
+    author: 'Robert T. Kiyosaki',
+    category: 'Finance · Personal Growth',
+    cover: '/books/rich-dad-poor-dad.jpg',
+    pdf: '/books/rich-dad-poor-dad.pdf',
+    description:
+      'A personal-finance book exploring different approaches to money, investing, work, and financial independence.',
+  },
 ];
 
 export const BooksPage: React.FC = () => {
