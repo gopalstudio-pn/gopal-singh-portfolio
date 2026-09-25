@@ -120,7 +120,7 @@ export const ContactSection: React.FC = () => {
                         <img
                           src={social.icon}
                           alt={social.name}
-                          className="w-6 h-6 object-contain opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300"
+                          className="w-7 h-7 object-contain opacity-90 transition-all duration-300 group-hover:scale-110 group-hover:opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.08)]"
                         />
 
                         <span className="absolute -right-5 -top-3 text-[10px] text-[#D4AF37] opacity-0 translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
