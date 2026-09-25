@@ -10,6 +10,15 @@ const books = [
     description:
       'An exploration of how people think about money, wealth, behaviour, and the decisions that shape financial life.',
   },
+  {
+    title: 'How to Win Friends and Influence People',
+    author: 'Dale Carnegie',
+    category: 'Self-Development · Communication',
+    cover: '/books/how-to-win-friends-and-influence-people.jpg',
+    pdf: '/books/how-to-win-friends-and-influence-people.pdf',
+    description:
+      'A classic guide to building better relationships, communicating effectively, and understanding people.',
+  },
 ];
 
 export const BooksPage: React.FC = () => {
