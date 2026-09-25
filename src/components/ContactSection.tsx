@@ -41,7 +41,7 @@ export const ContactSection: React.FC = () => {
                   className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#D4AF37]"
                   style={{ fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  05 / CONTACT
+                  05 — CONTACT
                 </span>
                 <div className="w-16 h-[1px] bg-gradient-to-r from-[#D4AF37]/80 via-[#8C6D4F]/40 to-transparent" />
               </motion.div>
@@ -59,10 +59,10 @@ export const ContactSection: React.FC = () => {
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                 >
                   <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#D5CBC0] to-[#605448] drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
-                    INITIALIZE
+                    LET'S CREATE
                   </span>
                   <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#F7E7C4] via-[#C99E5D] to-[#543B1A] drop-shadow-[0_8px_25px_rgba(201,158,93,0.35)]">
-                    TRANSMISSION.
+                    SOMETHING MEANINGFUL.
                   </span>
                 </h2>
               </motion.div>
@@ -71,7 +71,7 @@ export const ContactSection: React.FC = () => {
                 className="text-xs sm:text-[13px] font-light text-[#A8988B] leading-relaxed max-w-md"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                Have an ambitious system to architect, an engineering opportunity, or a collaborative inquiry? Send a direct dispatch below.
+                Have an idea, a project, or simply want to connect? I'd love to hear from you.
               </p>
               <a
                 href="mailto:gopalsingh.pn@gmail.com"
@@ -166,10 +166,10 @@ export const ContactSection: React.FC = () => {
                   ✓
                 </div>
                 <h3 className="text-3xl text-white font-normal uppercase" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-                  PACKET DELIVERED
+                  MESSAGE SENT
                 </h3>
                 <p className="text-xs text-[#A8988B] font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                  Transmission registered successfully.
+                  Thanks for reaching out. I'll get back to you soon.
                 </p>
               </div>
             ) : (
@@ -178,14 +178,14 @@ export const ContactSection: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <span className="block text-[9.5px] font-mono tracking-[0.2em] uppercase text-[#8C6D4F] mb-2">
-                      // SENDER
+                      // YOUR NAME
                     </span>
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Enter name"
+                      placeholder="Your name"
                       className="w-full bg-[#120F0C] border border-[#8C6D4F]/30 focus:border-[#D4AF37] text-xs text-white placeholder-[#8C6D4F]/50 px-4 py-3 outline-none rounded-sm transition-colors"
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
                     />
@@ -193,14 +193,14 @@ export const ContactSection: React.FC = () => {
 
                   <div>
                     <span className="block text-[9.5px] font-mono tracking-[0.2em] uppercase text-[#8C6D4F] mb-2">
-                      // CHANNEL
+                      // YOUR EMAIL
                     </span>
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="Enter email"
+                      placeholder="Your email"
                       className="w-full bg-[#120F0C] border border-[#8C6D4F]/30 focus:border-[#D4AF37] text-xs text-white placeholder-[#8C6D4F]/50 px-4 py-3 outline-none rounded-sm transition-colors"
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
                     />
@@ -209,14 +209,14 @@ export const ContactSection: React.FC = () => {
 
                 <div>
                   <span className="block text-[9.5px] font-mono tracking-[0.2em] uppercase text-[#8C6D4F] mb-2">
-                    // PAYLOAD
+                    // YOUR MESSAGE
                   </span>
                   <textarea
                     required
                     rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Enter transmission payload..."
+                    placeholder="Write your message..."
                     className="w-full bg-[#120F0C] border border-[#8C6D4F]/30 focus:border-[#D4AF37] text-xs text-white placeholder-[#8C6D4F]/50 p-4 outline-none rounded-sm transition-colors resize-none"
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
                   />
@@ -227,7 +227,7 @@ export const ContactSection: React.FC = () => {
                   className="w-full py-3.5 border border-[#8C6D4F]/50 bg-[#14100D] hover:border-[#D4AF37] hover:bg-[#1A1510] text-[#E8DFD8] hover:text-[#F7E7C4] text-xs font-medium tracking-[0.25em] uppercase transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                   style={{ fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  EXECUTE DISPATCH ↗
+                  SEND MESSAGE ↗
                 </button>
 
               </form>
