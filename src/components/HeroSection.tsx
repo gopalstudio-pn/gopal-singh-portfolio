@@ -29,7 +29,7 @@ const fadeUpVariants: Variants = {
 
 const navItems = [
   { name: 'ABOUT', href: '#about' },
-  { name: 'BOOKS', href: '#books' },
+  { name: 'BOOKS', href: '/books' },
   { name: 'SKILLS', href: '#skills' },
   { name: 'EDUCATION', href: '#experience' },
   { name: 'CONTACT', href: '#contact' },
@@ -37,6 +37,7 @@ const navItems = [
 
 export const HeroSection: React.FC = () => {
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
@@ -163,16 +164,42 @@ export const HeroSection: React.FC = () => {
               ↗
             </span>
           </a>
+          <button
+            type="button"
+            className="md:hidden flex items-center justify-center w-10 h-10 border border-[#8C6D4F]/50 text-[#EAD8C7] pointer-events-auto"
+            aria-label="Open menu"
+          >
+            <span className="text-xl leading-none">☰</span>
+          </button>
         </header>
 
-        {/* Mobile Navigation */}
-        <nav className="flex md:hidden items-center gap-5 overflow-x-auto whitespace-nowrap mt-5 pb-2 text-[10px] tracking-[0.22em] font-light uppercase text-[#C4B5A5]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-          {navItems.map((item) => (
-            <a key={item.name} href={item.href} className="shrink-0 py-1 hover:text-[#FFF5EB] transition-colors">
-              {item.name}
-            </a>
-          ))}
-        </nav>
+        {isMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-md pointer-events-auto">
+            <div className="flex justify-end px-6 pt-6">
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                className="w-10 h-10 border border-[#8C6D4F]/50 text-[#EAD8C7] text-xl"
+                aria-label="Close menu"
+              >
+                ×
+              </button>
+            </div>
+
+            <nav className="flex flex-col items-center justify-center h-[80vh] gap-8 text-sm tracking-[0.3em] uppercase">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-[#EAD8C7] hover:text-[#D4AF37] transition-colors"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
 
         {/* Main Hero Row */}
         <div className="relative flex flex-col md:flex-row items-center justify-between w-full pt-4 pb-2 my-auto">
