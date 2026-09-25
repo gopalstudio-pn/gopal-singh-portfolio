@@ -29,7 +29,7 @@ const fadeUpVariants: Variants = {
 
 const navItems = [
   { name: 'ABOUT', href: '#about' },
-  { name: 'BOOKS', href: '/books' },
+  { name: 'LIBRARY', href: '/books' },
   { name: 'SKILLS', href: '#skills' },
   { name: 'EDUCATION', href: '#experience' },
   { name: 'CONTACT', href: '#contact' },
@@ -175,30 +175,29 @@ export const HeroSection: React.FC = () => {
         </header>
 
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-md pointer-events-auto">
-            <div className="flex justify-end px-6 pt-6">
-              <button
-                type="button"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-10 h-10 border border-[#8C6D4F]/50 text-[#EAD8C7] text-xl"
-                aria-label="Close menu"
-              >
-                ×
-              </button>
-            </div>
+          <div className="md:hidden fixed inset-0 z-40 pointer-events-auto">
+            <div
+              className="absolute inset-0 bg-black/35 backdrop-blur-xl"
+              onClick={() => setIsMenuOpen(false)}
+            />
 
-            <nav className="flex flex-col items-center justify-center h-[80vh] gap-8 text-sm tracking-[0.3em] uppercase">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-[#EAD8C7] hover:text-[#D4AF37] transition-colors"
-                >
-                  {item.name}
-                </a>
-              ))}
-            </nav>
+            <div className="absolute top-20 left-5 right-5 rounded-2xl border border-white/10 bg-black/30 backdrop-blur-2xl shadow-2xl overflow-hidden">
+              <nav className="flex flex-col py-8">
+                {navItems.map((item, index) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="px-8 py-4 text-sm tracking-[0.3em] uppercase text-[#EAD8C7] hover:text-[#D4AF37] transition-all duration-300"
+                    style={{
+                      animation: `menuItem 0.45s ease-out ${index * 70}ms both`,
+                    }}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
+            </div>
           </div>
         )}
 

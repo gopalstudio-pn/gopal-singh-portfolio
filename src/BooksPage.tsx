@@ -75,14 +75,25 @@ export const BooksPage: React.FC = () => {
                     {book.description}
                   </p>
 
-                  <a
-                    href={book.pdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex mt-7 px-6 py-3 bg-[#171411] text-[#F1E8DD] text-[10px] tracking-[0.2em] uppercase hover:bg-[#3A3027] transition-colors"
-                  >
-                    READ BOOK →
-                  </a>
+                  <div className="mt-7 flex items-center gap-3">
+                    <a
+                      href={book.pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex px-6 py-3 bg-[#171411] text-[#F1E8DD] text-[10px] tracking-[0.2em] uppercase hover:bg-[#3A3027] transition-colors"
+                    >
+                      READ BOOK →
+                    </a>
+
+                    <a
+                      href={book.pdf}
+                      download
+                      aria-label={`Download ${book.title}`}
+                      className="inline-flex items-center justify-center w-11 h-11 border border-[#8C6D4F] text-[#171411] hover:bg-[#171411] hover:text-[#F1E8DD] transition-all duration-300"
+                    >
+                      ↓
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
