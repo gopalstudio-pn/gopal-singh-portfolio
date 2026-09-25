@@ -166,7 +166,7 @@ export const HeroSection: React.FC = () => {
           </a>
           <button
             type="button"
-            className="md:hidden flex items-center justify-center w-10 h-10 border border-[#8C6D4F]/50 text-[#EAD8C7] pointer-events-auto"
+            className="md:hidden relative z-[60] flex items-center justify-center w-10 h-10 border border-[#8C6D4F]/50 text-[#EAD8C7] pointer-events-auto"
             aria-label="Open menu"
           >
             <span className="text-xl leading-none">☰</span>
