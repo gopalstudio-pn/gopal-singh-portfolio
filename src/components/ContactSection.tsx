@@ -81,25 +81,64 @@ export const ContactSection: React.FC = () => {
                 GOPALSINGH.PN@GMAIL.COM ↗
               </a>
 
-              <div className="flex items-center gap-4 mt-6">
-                <a href="https://www.facebook.com/share/19Qz3uV7y6/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                  <img src="/facebook.png" alt="Facebook" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://www.instagram.com/gopalsingh.pn?stkn=bzZrZ2pxMXZ4NTdo" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <img src="/instagram.png" alt="Instagram" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://youtube.com/@gopalsingh-rr6yi" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                  <img src="/youtube.png" alt="YouTube" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://wa.me/9779707727608" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                  <img src="/whatsapp.png" alt="WhatsApp" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://www.tiktok.com/@gopalsingh.7" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-                  <img src="/tiktok.png" alt="TikTok" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="mailto:gopalsingh.pn@gmail.com" aria-label="Gmail">
-                  <img src="/gmail.png" alt="Gmail" className="w-7 h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </a>
+              <div className="mt-8">
+                <p
+                  className="text-[9px] tracking-[0.3em] uppercase text-[#8C6D4F] mb-4"
+                  style={{ fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  CONNECT / SOCIAL
+                </p>
+
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  {[
+                    { name: 'Facebook', icon: '/facebook.png', href: 'https://www.facebook.com/share/19Qz3uV7y6/' },
+                    { name: 'Instagram', icon: '/instagram.png', href: 'https://www.instagram.com/gopalsingh.pn?stkn=bzZrZ2pxMXZ4NTdo' },
+                    { name: 'YouTube', icon: '/youtube.png', href: 'https://youtube.com/@gopalsingh-rr6yi' },
+                    { name: 'WhatsApp', icon: '/whatsapp.png', href: 'https://wa.me/9779707727608' },
+                    { name: 'TikTok', icon: '/tiktok.png', href: 'https://www.tiktok.com/@gopalsingh.7' },
+                    { name: 'Gmail', icon: '/gmail.png', href: 'mailto:gopalsingh.pn@gmail.com' },
+                  ].map((social, index) => (
+                    <motion.a
+                      key={social.name}
+                      href={social.href}
+                      target={social.name === 'Gmail' ? undefined : '_blank'}
+                      rel={social.name === 'Gmail' ? undefined : 'noopener noreferrer'}
+                      aria-label={social.name}
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.08 }}
+                      whileHover={{ y: -5, scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="group relative flex flex-col items-center justify-center h-20 rounded-xl border border-[#8C6D4F]/25 bg-[#0D0B09]/70 backdrop-blur-sm hover:border-[#D4AF37]/70 hover:bg-[#17120D] transition-colors duration-300 overflow-hidden"
+                    >
+                      <motion.div
+                        className="absolute inset-0 rounded-xl bg-[#D4AF37]/0 group-hover:bg-[#D4AF37]/[0.04] transition-colors duration-300"
+                      />
+
+                      <div className="relative flex items-center justify-center">
+                        <img
+                          src={social.icon}
+                          alt={social.name}
+                          className="w-6 h-6 object-contain opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300"
+                        />
+
+                        <span className="absolute -right-5 -top-3 text-[10px] text-[#D4AF37] opacity-0 translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+                          ↗
+                        </span>
+                      </div>
+
+                      <span
+                        className="relative mt-2 text-[7px] tracking-[0.16em] uppercase text-[#806F60] group-hover:text-[#D4AF37] transition-colors duration-300"
+                        style={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        {social.name}
+                      </span>
+
+                      <span className="absolute bottom-0 left-1/2 w-0 h-[1px] bg-[#D4AF37] group-hover:w-1/2 -translate-x-1/2 transition-all duration-400" />
+                    </motion.a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
