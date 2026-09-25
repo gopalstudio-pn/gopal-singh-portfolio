@@ -46,6 +46,51 @@ const books = [
     description:
       'A personal-finance book exploring different approaches to money, investing, work, and financial independence.',
   },
+  {
+    title: 'The 4-Hour Workweek',
+    author: 'Timothy Ferriss',
+    category: 'Business · Productivity',
+    cover: '/books/the-4-hour-workweek.jpg',
+    pdf: '/books/the-4-hour-workweek.pdf',
+    description:
+      'A guide to rethinking traditional work, improving productivity, and creating more freedom in everyday life.',
+  },
+  {
+    title: 'The Intelligent Investor',
+    author: 'Benjamin Graham',
+    category: 'Finance · Investing',
+    cover: '/books/the-intelligent-investor.jpg',
+    pdf: '/books/the-intelligent-investor.pdf',
+    description:
+      'A classic introduction to value investing, disciplined decision-making, and long-term approaches to the market.',
+  },
+  {
+    title: 'Zero to One',
+    author: 'Peter Thiel',
+    category: 'Business · Startups',
+    cover: '/books/zero-to-one.jpg',
+    pdf: '/books/zero-to-one.pdf',
+    description:
+      'A perspective on startups, innovation, and creating new things rather than simply copying what already exists.',
+  },
+  {
+    title: 'The 48 Laws of Power',
+    author: 'Robert Greene',
+    category: 'Psychology · Strategy',
+    cover: '/books/48-laws-of-power.jpg',
+    pdf: '/books/48-laws-of-power.pdf',
+    description:
+      'A collection of historical observations and strategies about power, influence, and human behaviour.',
+  },
+  {
+    title: "Esquire's The New Rules for Men",
+    author: 'Esquire',
+    category: 'Lifestyle · Personal Growth',
+    cover: '/books/new-rules-for-men.jpg',
+    pdf: '/books/new-rules-for-men.pdf',
+    description:
+      'A guide covering style, relationships, work, confidence, and practical aspects of modern men’s life.',
+  },
 ];
 
 export const BooksPage: React.FC = () => {
