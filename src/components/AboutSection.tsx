@@ -11,7 +11,7 @@ export function AboutSection() {
       ([entry]) => {
         section.classList.toggle("about-visible", entry.isIntersecting);
       },
-      { threshold: 0.35 }
+      { threshold: 0.15 }
     );
 
     observer.observe(section);
