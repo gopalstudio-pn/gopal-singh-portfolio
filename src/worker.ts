@@ -12,7 +12,7 @@ export default {
     if (url.pathname === '/api/test') {
       return Response.json({
         success: true,
-        message: 'Gopal AI Studio backend is online.'
+        message: 'Gopal AI Studio backend is online.',
       });
     }
 
@@ -23,14 +23,20 @@ export default {
 
         if (typeof prompt !== 'string' || !prompt.trim()) {
           return Response.json(
-            { success: false, error: 'A prompt is required.' },
+            {
+              success: false,
+              error: 'A prompt is required.',
+            },
             { status: 400 }
           );
         }
 
         if (prompt.length > 1000) {
           return Response.json(
-            { success: false, error: 'Prompt is too long.' },
+            {
+              success: false,
+              error: 'Prompt is too long.',
+            },
             { status: 400 }
           );
         }
@@ -46,7 +52,10 @@ export default {
         if (reference instanceof File) {
           if (!reference.type.startsWith('image/')) {
             return Response.json(
-              { success: false, error: 'Reference must be an image.' },
+              {
+                success: false,
+                error: 'Reference must be an image.',
+              },
               { status: 400 }
             );
           }
@@ -59,13 +68,13 @@ export default {
         const result = await env.AI.run(MODEL, {
           multipart: {
             body: formResponse.body!,
-            contentType: formResponse.headers.get('content-type')!
-          }
+            contentType: formResponse.headers.get('content-type')!,
+          },
         });
 
         return Response.json({
           success: true,
-          image: result
+          image: result,
         });
       } catch (error) {
         console.error('AI generation error:', error);
@@ -73,13 +82,29 @@ export default {
         return Response.json(
           {
             success: false,
-            error: 'Image generation failed. Please try again.'
+            error: 'Image generation failed. Please try again.',
           },
           { status: 500 }
         );
       }
     }
 
+    // React SPA fallback:
+    // Any non-API route such as /ai-studio loads the main React app.
+    if (request.method === 'GET') {
+      const assetResponse = await env.ASSETS.fetch(request);
+
+      if (assetResponse.status === 404) {
+        return env.ASSETS.fetch(
+          new Request(new URL('/', request.url), request)
+        );
+      }
+
+      return assetResponse;
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
+
+
