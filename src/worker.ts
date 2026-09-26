@@ -3,7 +3,12 @@ export interface Env {
   ASSETS: Fetcher;
 }
 
-const MODEL = '@cf/black-forest-labs/flux-2-klein-4b';
+const MODELS: Record<string, string> = {
+  'flux-klein-4b': '@cf/black-forest-labs/flux-2-klein-4b',
+  'flux-klein-9b': '@cf/black-forest-labs/flux-2-klein-9b',
+  'flux-dev': '@cf/black-forest-labs/flux-2-dev',
+  'flux-schnell': '@cf/black-forest-labs/flux-1-schnell',
+};
 
 const RATIOS: Record<string, [number, number]> = {
   '1:1': [1024, 1024],
@@ -24,12 +29,37 @@ export default {
       });
     }
 
+    if (url.pathname === '/api/models' && request.method === 'GET') {
+      return Response.json({
+        success: true,
+        models: [
+          {
+            id: 'flux-klein-4b',
+            name: 'FLUX.2 Klein 4B',
+          },
+          {
+            id: 'flux-klein-9b',
+            name: 'FLUX.2 Klein 9B',
+          },
+          {
+            id: 'flux-dev',
+            name: 'FLUX.2 Dev',
+          },
+          {
+            id: 'flux-schnell',
+            name: 'FLUX.1 Schnell',
+          },
+        ],
+      });
+    }
+
     if (url.pathname === '/api/generate' && request.method === 'POST') {
       try {
         const incoming = await request.formData();
 
         const prompt = incoming.get('prompt');
         const ratioValue = incoming.get('ratio');
+        const modelValue = incoming.get('model');
 
         if (typeof prompt !== 'string' || !prompt.trim()) {
           return Response.json(
@@ -50,6 +80,13 @@ export default {
             { status: 400 }
           );
         }
+
+        const model =
+          typeof modelValue === 'string' && MODELS[modelValue]
+            ? modelValue
+            : 'flux-klein-4b';
+
+        const modelId = MODELS[model];
 
         const ratio =
           typeof ratioValue === 'string' && RATIOS[ratioValue]
@@ -82,7 +119,7 @@ export default {
 
         const formResponse = new Response(form);
 
-        const result = await env.AI.run(MODEL, {
+        const result = await env.AI.run(modelId, {
           multipart: {
             body: formResponse.body!,
             contentType: formResponse.headers.get('content-type')!,
@@ -91,6 +128,7 @@ export default {
 
         return Response.json({
           success: true,
+          model,
           ratio,
           width,
           height,
