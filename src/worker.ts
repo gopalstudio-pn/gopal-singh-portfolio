@@ -229,13 +229,13 @@ export default {
       } catch (error) {
         console.error('AI generation error:', error);
 
-        return Response.json(
-          {
-            success: false,
-            error: 'Image generation failed. Please try again.',
-          },
-          { status: 500 }
-        );
+return Response.json(
+  {
+    success: false,
+    error: error instanceof Error ? error.message : String(error),
+  },
+  { status: 500 }
+);
       }
     }
 
