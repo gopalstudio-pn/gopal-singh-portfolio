@@ -3,10 +3,21 @@ import React, { useState } from 'react';
 
 const ratios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
 
+const models = [
+  { id: 'flux-klein-4b', name: 'FLUX.2 Klein 4B', provider: 'Cloudflare' },
+  { id: 'flux-klein-9b', name: 'FLUX.2 Klein 9B', provider: 'Cloudflare' },
+  { id: 'flux-dev', name: 'FLUX.2 Dev', provider: 'Cloudflare' },
+  { id: 'flux-schnell', name: 'FLUX.1 Schnell', provider: 'Cloudflare' },
+  { id: 'nano-banana', name: 'Nano Banana', provider: 'Google' },
+  { id: 'nano-banana-2', name: 'Nano Banana 2', provider: 'Google' },
+  { id: 'nano-banana-pro', name: 'Nano Banana Pro', provider: 'Google' },
+];
+
 function AIStudioPage() {
   const [prompt, setPrompt] = useState('');
   const [reference, setReference] = useState<File | null>(null);
   const [ratio, setRatio] = useState('1:1');
+  const [model, setModel] = useState('flux-klein-4b');
   const [dragActive, setDragActive] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState('');
@@ -36,6 +47,7 @@ function AIStudioPage() {
 
       formData.append('prompt', prompt.trim());
       formData.append('ratio', ratio);
+      formData.append('model', model);
 
       if (reference) {
         setStage('PROCESSING REFERENCE');
@@ -58,12 +70,19 @@ function AIStudioPage() {
       setStage('GENERATING IMAGE');
 
       const imageData = data.image?.image;
+      const imageUrl = data.image?.image_url || data.image?.url;
 
-      if (typeof imageData !== 'string' || !imageData) {
+      if (typeof imageData === 'string' && imageData) {
+        setGeneratedImage(
+          imageData.startsWith('data:')
+            ? imageData
+            : `data:image/jpeg;base64,${imageData}`
+        );
+      } else if (typeof imageUrl === 'string' && imageUrl) {
+        setGeneratedImage(imageUrl);
+      } else {
         throw new Error('The generated image format was not recognized.');
       }
-
-      setGeneratedImage(`data:image/jpeg;base64,${imageData}`);
       setStage('');
     } catch (err) {
       console.error(err);
@@ -140,7 +159,41 @@ function AIStudioPage() {
           </p>
         </div>
 
-        <section className="mt-20 grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
+        <section className="mb-6 border border-white/10 bg-white/[0.025]">
+  <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+    <span className="text-[10px] tracking-[0.3em] text-white/50">
+      AI MODEL
+    </span>
+    <span className="text-[9px] tracking-[0.2em] text-white/25">
+      CHOOSE ENGINE
+    </span>
+  </div>
+
+  <div className="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+    {models.map((item) => (
+      <button
+        key={item.id}
+        type="button"
+        onClick={() => setModel(item.id)}
+        disabled={generating}
+        className={`min-h-[90px] bg-[#080808] px-5 py-4 text-left transition-all ${
+          model === item.id
+            ? 'bg-[#BFA98E]/10 text-[#E8DFD8]'
+            : 'text-white/50 hover:bg-white/[0.04] hover:text-white'
+        }`}
+      >
+        <div className="text-[11px] tracking-[0.12em]">
+          {item.name}
+        </div>
+        <div className="mt-2 text-[8px] tracking-[0.2em] text-white/25">
+          {item.provider}
+        </div>
+      </button>
+    ))}
+  </div>
+</section>
+
+<section className="mt-20 grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
           <div className="border border-white/10 bg-white/[0.025]">
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
               <span className="text-[10px] tracking-[0.3em] text-white/50">
