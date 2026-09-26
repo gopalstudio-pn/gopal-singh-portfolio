@@ -68,21 +68,22 @@ function AIStudioPage() {
       }
 
       setStage('GENERATING IMAGE');
+const imageData = data.image?.image;
+const imageUrl = data.image?.image_url || data.image?.url;
 
-      const imageData = data.image?.image;
-      const imageUrl = data.image?.image_url || data.image?.url;
-
-      if (typeof imageData === 'string' && imageData) {
-        setGeneratedImage(
-          imageData.startsWith('data:')
-            ? imageData
-            : `data:image/jpeg;base64,${imageData}`
-        );
-      } else if (typeof imageUrl === 'string' && imageUrl) {
-        setGeneratedImage(imageUrl);
-      } else {
-        throw new Error('The generated image format was not recognized.');
-      }
+if (typeof imageData === 'string' && imageData) {
+  setGeneratedImage(
+    imageData.startsWith('data:')
+      ? imageData
+      : `data:image/jpeg;base64,${imageData}`
+  );
+} else if (typeof imageUrl === 'string' && imageUrl) {
+  setGeneratedImage(imageUrl);
+} else if (typeof data.image === 'string' && data.image) {
+  setGeneratedImage(data.image);
+} else {
+  throw new Error('The generated image format was not recognized.');
+}
       setStage('');
     } catch (err) {
       console.error(err);
