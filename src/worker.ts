@@ -94,18 +94,17 @@ if (url.pathname.startsWith('/api/download/') && request.method === 'POST') {
 
   return env.ASSETS.fetch(
     new Request(new URL(`/books/${file}`, request.url))
-  );
-}      return Response.json({
-        success: true,
-        message: 'Gopal AI Studio backend is online.',
-      });
-    }
+  );}
+}
 
-    if (url.pathname === '/api/models' && request.method === 'GET') {
-      return Response.json({
-        success: true,
-        models: MODEL_INFO,
-      });
+if (url.pathname === '/api/test') {
+  return Response.json({
+    success: true,
+    message: 'Gopal AI Studio backend is online.',
+  });
+}
+
+if (url.pathname === '/api/models' && request.method === 'GET') {      });
     }
 
     if (url.pathname === '/api/generate' && request.method === 'POST') {
