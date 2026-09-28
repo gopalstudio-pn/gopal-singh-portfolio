@@ -407,9 +407,12 @@ export const BooksPage: React.FC = () => {
             <a
               href="/#contact"
               onClick={() => setDownloadBook(null)}
-              className="mt-5 block text-center text-[10px] tracking-[0.2em] uppercase text-[#CBB59D] hover:text-[#D4AF37] transition-colors"
+              className="mt-5 group flex items-center justify-center gap-3 w-full py-4 border border-[#D4AF37]/60 bg-[#D4AF37]/10 text-[#F1E8DD] text-[10px] tracking-[0.2em] uppercase hover:bg-[#D4AF37] hover:text-[#171411] hover:border-[#D4AF37] transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.08)] hover:shadow-[0_0_28px_rgba(212,175,55,0.22)]"
             >
-              गोपाल से गप करु
+              <span>गोपाल से गप करु</span>
+              <span className="text-[#D4AF37] group-hover:text-[#171411] group-hover:translate-x-1 transition-all duration-300">
+                ↗
+              </span>
             </a>
 
             <button
