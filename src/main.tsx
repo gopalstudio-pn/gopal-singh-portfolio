@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import BooksPage from './BooksPage';
 import AIStudioPage from './AIStudioPage';
+import ConnectPage from './ConnectPage';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<App />} />
         <Route path="/books" element={<BooksPage />} />
         <Route path="/ai-studio" element={<AIStudioPage />} />
+        <Route path="/connect" element={<ConnectPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
