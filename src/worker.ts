@@ -1,8 +1,8 @@
 export interface Env {
   AI: Ai;
   ASSETS: Fetcher;
+  BOOK_DOWNLOAD_PASSWORD: string;
 }
-
 const MODELS: Record<string, string> = {
   'flux-klein-4b': '@cf/black-forest-labs/flux-2-klein-4b',
   'flux-klein-9b': '@cf/black-forest-labs/flux-2-klein-9b',
@@ -77,8 +77,25 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.pathname === '/api/test') {
-      return Response.json({
+if (url.pathname.startsWith('/api/download/') && request.method === 'POST') {
+  const password = request.headers.get('x-download-password');
+
+  if (password !== env.BOOK_DOWNLOAD_PASSWORD) {
+    return Response.json(
+      {
+        success: false,
+        error: 'Invalid download password.',
+      },
+      { status: 401 }
+    );
+  }
+
+  const file = url.pathname.replace('/api/download/', '');
+
+  return env.ASSETS.fetch(
+    new Request(new URL(`/books/${file}`, request.url))
+  );
+}      return Response.json({
         success: true,
         message: 'Gopal AI Studio backend is online.',
       });

@@ -218,46 +218,14 @@ export const BooksPage: React.FC = () => {
                         READ BOOK →
                       </a>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const password = prompt("Enter download password");
-
-                          if (!password) return;
-
-                          fetch(`/api/download/${book.pdf.split("/").pop()}`, {
-                            method: "POST",
-                            headers: {
-                              "x-download-password": password,
-                            },
-                          })
-                            .then(async (res) => {
-                              if (!res.ok) {
-                                alert("Wrong password");
-                                return;
-                              }
-
-                              const blob = await res.blob();
-                              const url = URL.createObjectURL(blob);
-
-                              const link = document.createElement("a");
-                              link.href = url;
-                              link.download = `${book.title}.pdf`;
-                              document.body.appendChild(link);
-                              link.click();
-                              link.remove();
-
-                              URL.revokeObjectURL(url);
-                            })
-                            .catch(() => {
-                              alert("Download failed");
-                            });
-                        }}
+                      <a
+                        href={book.pdf}
+                        download
                         aria-label={`Download ${book.title}`}
                         className="inline-flex items-center justify-center w-11 h-11 border border-[#8C6D4F] text-[#171411] hover:bg-[#171411] hover:text-[#F1E8DD] transition-all duration-300"
                       >
                         ↓
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </article>
