@@ -96,6 +96,11 @@ const books = [
 export const BooksPage: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [downloadBook, setDownloadBook] = useState<(typeof books)[number] | null>(null);
+  const [downloadPassword, setDownloadPassword] = useState('');
+  const [downloadError, setDownloadError] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [shakeKey, setShakeKey] = useState(0);
 
   const filteredBooks = books.filter((book) =>
     `${book.title} ${book.author} ${book.category}`
@@ -221,37 +226,10 @@ export const BooksPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const password = prompt("Enter download password");
-
-                          if (!password) return;
-
-                          fetch(`/api/download/${book.pdf.split("/").pop()}`, {
-                            method: "POST",
-                            headers: {
-                              "x-download-password": password,
-                            },
-                          })
-                            .then(async (res) => {
-                              if (!res.ok) {
-                                alert("Wrong password");
-                                return;
-                              }
-
-                              const blob = await res.blob();
-                              const url = URL.createObjectURL(blob);
-
-                              const link = document.createElement("a");
-                              link.href = url;
-                              link.download = `${book.title}.pdf`;
-                              document.body.appendChild(link);
-                              link.click();
-                              link.remove();
-
-                              URL.revokeObjectURL(url);
-                            })
-                            .catch(() => {
-                              alert("Download failed");
-                            });
+                          setDownloadBook(book);
+                          setDownloadPassword('');
+                          setDownloadError(false);
+                          setDownloading(false);
                         }}
                         aria-label={`Download ${book.title}`}
                         className="inline-flex items-center justify-center w-11 h-11 border border-[#8C6D4F] text-[#171411] hover:bg-[#171411] hover:text-[#F1E8DD] transition-all duration-300"
@@ -285,6 +263,167 @@ export const BooksPage: React.FC = () => {
 
         </div>
       </div>
+
+      {downloadBook && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center px-5 bg-black/75 backdrop-blur-md"
+          onClick={() => {
+            if (!downloading) setDownloadBook(null);
+          }}
+        >
+          <div
+            key={shakeKey}
+            className="w-full max-w-md bg-[#171411]/95 border border-[#8C6D4F]/40 shadow-2xl p-7 sm:p-9"
+            style={{
+              animation: downloadError
+                ? 'download-shake 0.5s ease-in-out'
+                : 'download-modal-in 0.35s ease-out',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <style>{`
+              @keyframes download-modal-in {
+                from {
+                  opacity: 0;
+                  transform: translateY(18px) scale(0.96);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0) scale(1);
+                }
+              }
+
+              @keyframes download-shake {
+                0%, 100% { transform: translateX(0); }
+                15% { transform: translateX(-9px); }
+                30% { transform: translateX(8px); }
+                45% { transform: translateX(-7px); }
+                60% { transform: translateX(6px); }
+                75% { transform: translateX(-4px); }
+                90% { transform: translateX(3px); }
+              }
+            `}</style>
+
+            <div className="flex items-center justify-center w-14 h-14 mx-auto border border-[#D4AF37]/50 rounded-full text-[#D4AF37] text-xl">
+              🔐
+            </div>
+
+            <p className="mt-6 text-center text-[10px] tracking-[0.35em] uppercase text-[#D4AF37]">
+              PRIVATE ACCESS
+            </p>
+
+            <h3 className="mt-3 text-center text-2xl text-[#F1E8DD]">
+              Download Book
+            </h3>
+
+            <p className="mt-3 text-center text-xs leading-6 text-[#9A8878]">
+              Enter your access key to download
+              <br />
+              <span className="text-[#CBB59D]">{downloadBook.title}</span>
+            </p>
+
+            <input
+              autoFocus
+              type="password"
+              value={downloadPassword}
+              onChange={(e) => {
+                setDownloadPassword(e.target.value);
+                setDownloadError(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  document.getElementById('unlock-book-button')?.click();
+                }
+              }}
+              placeholder="Enter access key"
+              className="mt-6 w-full bg-black/30 border border-[#8C6D4F]/50 px-4 py-4 text-sm text-[#F1E8DD] outline-none focus:border-[#D4AF37] transition-colors placeholder:text-[#75685D]"
+            />
+
+            {downloadError && (
+              <p className="mt-3 text-center text-sm text-[#D4AF37]">
+                नाई मिलल password
+              </p>
+            )}
+
+            <button
+              id="unlock-book-button"
+              type="button"
+              disabled={downloading || !downloadPassword}
+              onClick={async () => {
+                if (!downloadPassword || downloading) return;
+
+                setDownloadError(false);
+                setDownloading(true);
+
+                try {
+                  const file = downloadBook.pdf.split('/').pop();
+
+                  const res = await fetch(`/api/download/${file}`, {
+                    method: 'POST',
+                    headers: {
+                      'x-download-password': downloadPassword,
+                    },
+                  });
+
+                  if (!res.ok) {
+                    setDownloading(false);
+                    setDownloadError(true);
+                    setShakeKey((value) => value + 1);
+                    return;
+                  }
+
+                  const blob = await res.blob();
+
+                  if (blob.type !== 'application/pdf') {
+                    throw new Error('Invalid PDF response');
+                  }
+
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+
+                  link.href = url;
+                  link.download = `${downloadBook.title}.pdf`;
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+
+                  URL.revokeObjectURL(url);
+
+                  setDownloading(false);
+                  setDownloadBook(null);
+                  setDownloadPassword('');
+                } catch {
+                  setDownloading(false);
+                  setDownloadError(true);
+                  setShakeKey((value) => value + 1);
+                }
+              }}
+              className="mt-5 w-full py-4 bg-[#D4AF37] text-[#171411] text-[10px] tracking-[0.25em] uppercase hover:bg-[#E2C45A] disabled:opacity-40 transition-colors"
+            >
+              {downloading ? 'UNLOCKING...' : 'UNLOCK ↗'}
+            </button>
+
+            <a
+              href="/#contact"
+              onClick={() => setDownloadBook(null)}
+              className="mt-5 block text-center text-[10px] tracking-[0.2em] uppercase text-[#CBB59D] hover:text-[#D4AF37] transition-colors"
+            >
+              गोपाल से गप करु
+            </a>
+
+            <button
+              type="button"
+              disabled={downloading}
+              onClick={() => setDownloadBook(null)}
+              className="mt-4 w-full text-[9px] tracking-[0.2em] uppercase text-[#75685D] hover:text-[#F1E8DD] transition-colors"
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 };
