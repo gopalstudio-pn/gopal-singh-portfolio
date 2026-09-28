@@ -25,6 +25,15 @@ export default {
       });
     }
 
-    return env.ASSETS.fetch(request);
+    let response = await env.ASSETS.fetch(request);
+
+    // SPA fallback for React Router
+    if (response.status === 404) {
+      return env.ASSETS.fetch(
+        new Request(new URL("/", request.url))
+      );
+    }
+
+    return response;
   },
-} 
+};
