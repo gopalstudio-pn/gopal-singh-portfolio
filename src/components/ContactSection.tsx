@@ -8,12 +8,30 @@ export const ContactSection: React.FC = () => {
 
   const recipientEmail = 'gopalsingh.pn@gmail.com';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio enquiry from ${formData.name}`);
-    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`);
-    window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
-    setSent(true);
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: '8b577a46-039f-4652-83d9-c18594d7ed2e',
+          subject: `Portfolio enquiry from ${formData.name}`,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        setSent(true);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        alert('Message could not be sent. Please try again.');
+      }
+    } catch {
+      alert('Network error. Please try again.');
+    }
   };
 
   return (
