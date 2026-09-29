@@ -192,22 +192,22 @@ md:landscape:object-contain
             {/* Massive Condensed Headline */}
             <motion.div variants={fadeUpVariants} className="relative mb-3.5 select-none">
               <h1
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-[7.2rem] xl:text-[7.8rem] tracking-tight uppercase leading-[0.83]"
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-[length:min(7.2rem,15vh)] xl:text-[length:min(7.8rem,15vh)] tracking-tight uppercase leading-[0.83]"
                 style={{ fontFamily: "'Bebas Neue', sans-serif" }}
               >
                 {/* Line 1: I BUILD */}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#D5CBC0] to-[#605448] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
-                  I BUILD
+                  IDEAS
                 </span>
 
                 {/* Line 2: DIGITAL */}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#F7E7C4] via-[#C99E5D] to-[#543B1A] drop-shadow-[0_8px_25px_rgba(201,158,93,0.35)]">
-                  DIGITAL
+                  INTO
                 </span>
 
                 {/* Line 3: EXPERIENCES */}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#DFBE8A] via-[#9B7640] to-[#342410] drop-shadow-[0_10px_30px_rgba(155,118,64,0.4)]">
-                  EXPERIENCES
+                  REALITY
                 </span>
               </h1>
             </motion.div>
@@ -218,7 +218,7 @@ md:landscape:object-contain
                 className="text-[10px] sm:text-[11px] md:text-xs font-normal tracking-[0.28em] uppercase text-[#C4B29E]"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                FULL STACK DEVELOPER <span className="text-[#8C6D4F] mx-1">•</span> UI/UX DESIGNER <span className="text-[#8C6D4F] mx-1">•</span> DATA SCIENCE
+                CREATOR <span className="text-[#8C6D4F] mx-1">•</span> DEVELOPER <span className="text-[#8C6D4F] mx-1">•</span> LIFELONG LEARNER
               </p>
             </motion.div>
 
@@ -229,9 +229,9 @@ md:landscape:object-contain
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
               <p>
-                I turn bold ideas into seamless digital experiences.
+                I create clean, modern websites and digital experiences.
                 <br />
-                Where frontend meets powerful backend, and code transforms vision into impact.
+                Every project starts with an idea and ends with real impact.
               </p>
             </motion.div>
 
@@ -243,14 +243,14 @@ md:landscape:object-contain
             >
               {/* Explore My Work CTA */}
               <motion.a
-                href="#work"
+                href="/books"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 whileHover={{ scale: 1.02 }}
                 className="relative inline-flex items-center space-x-3 px-6 sm:px-7 py-3.5 border border-[#8C6D4F] bg-[#120F0C]/80 hover:border-[#D4AF37] text-[#EAD8C7] hover:text-[#FFF5EB] text-[11px] font-medium tracking-[0.24em] uppercase transition-all duration-300 shadow-[0_0_25px_rgba(212,175,55,0.18)]"
               >
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#E8D7C5]/40 to-transparent pointer-events-none" />
-                <span>EXPLORE MY WORK</span>
+                <span>VIEW MY LIBRARY</span>
                 <span className="transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-xs">
                   ↗
                 </span>
@@ -275,8 +275,8 @@ md:landscape:object-contain
               className="text-[9.5px] font-medium tracking-[0.24em] uppercase text-[#E0D3C5] space-y-1 mb-3"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              <p>CODE IS MY CRAFT.</p>
-              <p>IMPACT IS MY GOAL.</p>
+              <p>STAY CURIOUS.</p>
+              <p>KEEP CREATING.</p>
             </div>
 
             {/* 3. Gold Accent Line */}
