@@ -69,11 +69,12 @@ export const HeroSection: React.FC = () => {
 {/* ================= 2. FIXED IMAGE HERO LAYER ================= */}
 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
 
+<picture>
+  <source media="(min-width: 768px)" srcSet="/gopalsinghdesktop.png" />
   <img
     src="/maingape.jpg"
     alt=""
-    className="
-      absolute inset-0
+    className="      absolute inset-0
       w-full h-full
       object-cover
       object-[62%_center]
@@ -84,7 +85,7 @@ export const HeroSection: React.FC = () => {
       scale-[1.02]
     "
   />
-
+</picture>
   {/* Cinematic dark blend for website text */}
   <div className="absolute inset-0 bg-gradient-to-r from-black via-black/55 to-transparent" />
 
