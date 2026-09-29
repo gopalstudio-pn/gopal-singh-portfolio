@@ -192,7 +192,7 @@ md:landscape:object-contain
             {/* Massive Condensed Headline */}
             <motion.div variants={fadeUpVariants} className="relative mb-3.5 select-none">
               <h1
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-[length:min(7.2rem,15vh)] xl:text-[length:min(7.8rem,15vh)] tracking-tight uppercase leading-[0.83]"
+                className="text-6xl sm:text-7xl md:text-[length:min(6rem,13vh)] lg:text-[length:min(7.2rem,13vh)] xl:text-[length:min(7.8rem,13vh)] tracking-tight uppercase leading-[0.83]"
                 style={{ fontFamily: "'Bebas Neue', sans-serif" }}
               >
                 {/* Line 1: I BUILD */}
