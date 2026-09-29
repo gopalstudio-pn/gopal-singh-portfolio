@@ -78,7 +78,8 @@ export const HeroSection: React.FC = () => {
     alt=""
     className="      absolute inset-0
       w-full h-full
-      object-contain
+      object-cover 
+md:landscape:object-contain
       object-[62%_center]
       sm:object-[65%_center]
       md:object-[72%_center]
