@@ -25,15 +25,17 @@ export function AboutSection() {
       id="about"
       className="about-section relative min-h-screen overflow-hidden bg-black"
     >
-      <picture className="absolute inset-0 block h-full w-full">
-        <source media="(max-width: 767px)" srcSet="/mobile.png" />
-        <img
-          src="/gopalsinghdesktop.png"
-          alt="Gopal Singh"
-          className="about-image h-full w-full object-cover object-center"
-        />
-      </picture>
-
+<picture className="absolute inset-0 block h-full w-full">
+  <source
+    media="(orientation: portrait)"
+    srcSet="/mobile.png"
+  />
+  <img
+    src="/desktop.png"
+    alt="Gopal Singh"
+    className="about-image h-full w-full object-cover object-center"
+  />
+</picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent" />
 
       <div className="about-light pointer-events-none absolute left-[-20%] top-[-20%] h-[140%] w-[35%] rotate-[12deg] bg-white/[0.035] blur-3xl" />

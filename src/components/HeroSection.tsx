@@ -70,19 +70,20 @@ export const HeroSection: React.FC = () => {
 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
 
 <picture>
-  <source media="(min-width: 768px)" srcSet="/gopalsinghdesktop.png" />
-  <img
+<source
+  media="(min-width: 768px) and (orientation: landscape)"
+  srcSet="/gopalsinghdesktop.png"
+/>  <img
     src="/maingape.jpg"
     alt=""
     className="      absolute inset-0
       w-full h-full
-      object-cover
+      object-contain
       object-[62%_center]
       sm:object-[65%_center]
       md:object-[72%_center]
       lg:object-[74%_center]
       xl:object-[76%_center]
-      scale-[1.02]
     "
   />
 </picture>
