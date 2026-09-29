@@ -11,6 +11,27 @@ const models = [
   { id: 'sdxl-base', name: 'Stable Diffusion XL', provider: 'Cloudflare' },
 ];
 
+async function shrinkImage(file: File): Promise<Blob> {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 500 / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return file;
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    const blob: Blob | null = await new Promise((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.92)
+    );
+    return blob || file;
+  } catch {
+    return file;
+  }
+}
+
 function AIStudioPage() {
   const [prompt, setPrompt] = useState('');
   const [reference, setReference] = useState<File | null>(null);
@@ -49,7 +70,7 @@ function AIStudioPage() {
 
       if (reference) {
         setStage('PROCESSING REFERENCE');
-        formData.append('reference', reference);
+        formData.append('reference', await shrinkImage(reference), 'reference.jpg');
       }
 
       setStage('COMPOSING SCENE');

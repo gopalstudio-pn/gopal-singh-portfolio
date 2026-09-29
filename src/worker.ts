@@ -67,7 +67,19 @@ export default {
 
         if (modelKey === "flux-klein-4b") {
           const body = new FormData();
-          body.append("prompt", prompt);
+          const referenceFile = form.get("reference");
+          let finalPrompt = prompt;
+          if (
+            referenceFile &&
+            typeof referenceFile !== "string" &&
+            referenceFile.size > 0
+          ) {
+            body.append("input_image_0", referenceFile, "reference.jpg");
+            finalPrompt =
+              "Keep the exact same face, identity and features of the person in image 0. " +
+              prompt;
+          }
+          body.append("prompt", finalPrompt);
           body.append("width", String(width));
           body.append("height", String(height));
           const packed = new Response(body);
