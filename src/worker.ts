@@ -7,7 +7,12 @@ export interface Env {
 const MODELS = {
   "flux-schnell": "@cf/black-forest-labs/flux-1-schnell",
   "flux-klein-4b": "@cf/black-forest-labs/flux-2-klein-4b",
+  "sdxl-lightning": "@cf/bytedance/stable-diffusion-xl-lightning",
+  "dreamshaper": "@cf/lykon/dreamshaper-8-lcm",
+  "sdxl-base": "@cf/stabilityai/stable-diffusion-xl-base-1.0",
 };
+
+const STREAM_MODELS = ["sdxl-lightning", "dreamshaper", "sdxl-base"];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -72,6 +77,23 @@ export default {
               contentType: packed.headers.get("content-type"),
             },
           });
+        } else if (STREAM_MODELS.includes(modelKey)) {
+          const steps =
+            modelKey === "sdxl-base" ? 20 : modelKey === "dreamshaper" ? 6 : 4;
+          const stream = await (env.AI as any).run(modelId, {
+            prompt,
+            width,
+            height,
+            num_steps: steps,
+          });
+          const buffer = await new Response(stream).arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          let binary = "";
+          const chunk = 0x8000;
+          for (let i = 0; i < bytes.length; i += chunk) {
+            binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+          }
+          result = "data:image/png;base64," + btoa(binary);
         } else {
           result = await (env.AI as any).run(modelId, {
             prompt,

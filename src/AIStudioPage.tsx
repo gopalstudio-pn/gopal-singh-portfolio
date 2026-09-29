@@ -5,12 +5,10 @@ const ratios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
 
 const models = [
   { id: 'flux-klein-4b', name: 'FLUX.2 Klein 4B', provider: 'Cloudflare' },
-  { id: 'flux-klein-9b', name: 'FLUX.2 Klein 9B', provider: 'Cloudflare' },
-  { id: 'flux-dev', name: 'FLUX.2 Dev', provider: 'Cloudflare' },
   { id: 'flux-schnell', name: 'FLUX.1 Schnell', provider: 'Cloudflare' },
-  { id: 'nano-banana', name: 'Nano Banana', provider: 'Google' },
-  { id: 'nano-banana-2', name: 'Nano Banana 2', provider: 'Google' },
-  { id: 'nano-banana-pro', name: 'Nano Banana Pro', provider: 'Google' },
+  { id: 'sdxl-lightning', name: 'SDXL Lightning', provider: 'Cloudflare' },
+  { id: 'dreamshaper', name: 'DreamShaper 8', provider: 'Cloudflare' },
+  { id: 'sdxl-base', name: 'Stable Diffusion XL', provider: 'Cloudflare' },
 ];
 
 function AIStudioPage() {
