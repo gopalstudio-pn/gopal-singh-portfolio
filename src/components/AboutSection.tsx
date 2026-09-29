@@ -28,7 +28,7 @@ export function AboutSection() {
       <picture className="absolute inset-0 block h-full w-full">
         <source media="(max-width: 767px)" srcSet="/mobile.png" />
         <img
-          src="/desktop.png"
+          src="/gopalsinghdesktop.png"
           alt="Gopal Singh"
           className="about-image h-full w-full object-cover object-center"
         />
