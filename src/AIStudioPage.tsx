@@ -1,6 +1,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { CollectorCard } from './components/CollectorCard';
+import { MoviePoster } from './components/MoviePoster';
 
 const ratios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
 
@@ -55,6 +56,7 @@ function AIStudioPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [style, setStyle] = useState('');
   const [showCard, setShowCard] = useState(false);
+  const [showPoster, setShowPoster] = useState(false);
 
   const handleFile = (file?: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -166,6 +168,7 @@ if (typeof imageData === 'string' && imageData) {
   return (
     <div className="min-h-screen bg-[#080808] text-[#E8DFD8]">
       {showCard && generatedImage && <CollectorCard image={generatedImage} onClose={() => setShowCard(false)} />}
+      {showPoster && generatedImage && <MoviePoster image={generatedImage} onClose={() => setShowPoster(false)} />}
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
         <a href="/" className="text-xs tracking-[0.35em] transition-opacity hover:opacity-60">GOPAL</a>
         <span className="text-[10px] tracking-[0.35em] text-white/40">AI STUDIO</span>
@@ -205,6 +208,7 @@ if (typeof imageData === 'string' && imageData) {
             <button type="button" onClick={handleDownload} className="text-[#BFA98E] hover:text-white">DOWNLOAD ↓</button>
             <button type="button" onClick={handleCreateAgain} className="text-white/50 hover:text-white">CREATE AGAIN</button>
             <button type="button" onClick={() => setShowCard(true)} className="text-[#D4AF37] hover:text-white">COLLECTOR CARD ★</button>
+            <button type="button" onClick={() => setShowPoster(true)} className="text-[#D4AF37] hover:text-white">MOVIE POSTER 🎬</button>
           </div>
         )}
 
