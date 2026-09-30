@@ -62,6 +62,53 @@ export function AboutSection() {
               photography, AI, digital experiences, and the process of turning
               curiosity into something tangible.
             </p>
+
+            <div className="mt-12 space-y-8" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <div className="about-item" style={{ transitionDelay: '0.42s' }}>
+                <div className="flex items-center gap-3 text-[#D4AF37]">
+                  <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.6" /></svg>
+                  <span className="text-[11px] font-medium tracking-[0.35em]">GOLBAZAR, SIRAHA, NEPAL</span>
+                </div>
+                <div className="mt-3 h-px w-40 bg-gradient-to-r from-[#D4AF37] to-transparent" />
+              </div>
+
+              <div className="about-item" style={{ transitionDelay: '0.5s' }}>
+                <p className="mb-4 text-[10px] tracking-[0.35em] text-white/40">THE JOURNEY</p>
+                <div className="space-y-3 border-l border-[#D4AF37]/40 pl-5">
+                  <p className="text-xs leading-6 text-white/70"><span className="mr-3 text-[#D4AF37]">2018</span>SEE · JVM Higher Secondary School, Golbazar</p>
+                  <p className="text-xs leading-6 text-white/70"><span className="mr-3 text-[#D4AF37]">2020</span>+2 Science · Mount Everest Boarding School</p>
+                </div>
+              </div>
+
+              <div className="about-item" style={{ transitionDelay: '0.58s' }}>
+                <p className="mb-3 text-[10px] tracking-[0.35em] text-white/40">BEYOND THE SCREEN</p>
+                <p className="text-xs tracking-[0.2em] text-white/70">CRICKET <span className="mx-2 text-[#D4AF37]">•</span> BOOKS <span className="mx-2 text-[#D4AF37]">•</span> TRAVEL</p>
+              </div>
+
+              <div className="about-item" style={{ transitionDelay: '0.66s' }}>
+                <p className="mb-3 text-[10px] tracking-[0.35em] text-white/40">LANGUAGES</p>
+                <p className="text-xs leading-6 tracking-[0.2em] text-white/70">ENGLISH <span className="mx-1 text-[#D4AF37]">•</span> MAITHILI <span className="mx-1 text-[#D4AF37]">•</span> NEPALI <span className="mx-1 text-[#D4AF37]">•</span> HINDI <span className="mx-1 text-[#D4AF37]">•</span> BHOJPURI</p>
+              </div>
+
+              <div className="about-item" style={{ transitionDelay: '0.74s' }}>
+                <p className="mb-4 text-[10px] tracking-[0.35em] text-white/40">FAVORITES</p>
+                <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+                  {[['CRICKETER', 'MS Dhoni'], ['IPL TEAM', 'Chennai Super Kings'], ['NPL TEAM', 'Janakpur Bolts'], ['PLACE', 'Vrindavan'], ['MOVIE', 'Ranjhana'], ['BOOK', 'The Psychology of Money']].map(([k, v]) => (
+                    <div key={k}>
+                      <p className="text-[9px] tracking-[0.3em] text-[#D4AF37]/80">{k}</p>
+                      <p className="mt-1 text-xs text-white/75">{v}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-5 text-[9px] tracking-[0.3em] text-[#D4AF37]/80">ACTORS</p>
+                <p className="mt-1 text-xs text-white/75">Robert Downey Jr. · Hrithik Roshan · Ranveer Kapoor</p>
+              </div>
+
+              <div className="about-item" style={{ transitionDelay: '0.82s' }}>
+                <p className="font-serif text-lg font-light italic text-[#D4AF37]">“Millionaire, one day.”</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
