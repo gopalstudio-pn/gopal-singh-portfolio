@@ -32,7 +32,34 @@ export default {
       });
     }
 
-    if (url.pathname === "/api/generate" && request.method === "POST") {
+    if (url.pathname === "/api/chat" && request.method === "POST") {
+      try {
+        const GOPAL_INFO =
+          "You are Ask Gopal AI, the assistant on Gopal Singh's personal portfolio website. Answer in 2 to 4 short, friendly sentences. Use only these facts. Gopal Singh is a student doing Bsc. Science at Rrm campus, Janakpurdham, Nepal. His skill areas are: Web and Digital (web development, digital marketing, content creation, online research); AI and Technology (artificial intelligence, generative AI, AI tools, prompt engineering); Creative (photography, photo editing, video editing, visual design); Communication (communication, presentation, public speaking, teamwork); Personal (creativity, problem solving, adaptability, time management). The website has a Library page with 10 books, for example The Psychology of Money and Atomic Habits, and a free AI Studio page that makes images from a prompt and an optional reference face. Contact email: gopalsingh.pn@gmail.com, or use the contact form on the homepage. If asked anything not listed here, say you do not know and suggest contacting Gopal by email. Never invent facts about Gopal.";
+        const data: any = await request.json();
+        const incoming = Array.isArray(data.messages) ? data.messages : [];
+        const history = incoming
+          .slice(-6)
+          .map((m: any) => ({
+            role: m.role === "assistant" ? "assistant" : "user",
+            content: String(m.content || "").slice(0, 500),
+          }))
+          .filter((m: any) => m.content);
+        if (!history.length) {
+          return Response.json({ success: false, error: "Ask a question first." }, { status: 400 });
+        }
+        const result: any = await (env.AI as any).run(
+          "@cf/meta/llama-3.1-8b-instruct-fp8-fast",
+          { messages: [{ role: "system", content: GOPAL_INFO }, ...history], max_tokens: 250 }
+        );
+        return Response.json({ success: true, reply: String(result.response || "").trim() });
+      } catch (err) {
+        return Response.json({ success: false, error: "The assistant is busy. Please try again." }, { status: 500 });
+      }
+    }
+
+    
+if (url.pathname === "/api/generate" && request.method === "POST") {
       try {
         const form = await request.formData();
         const prompt = String(form.get("prompt") || "").trim();
