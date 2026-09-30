@@ -5,6 +5,7 @@ import { SkillsSection } from './components/SkillsSection';
 import { ExperienceSection } from './components/ExperienceSection';
 import { ContactSection } from './components/ContactSection';
 import BooksPage from './BooksPage';
+import { IntroSplash } from './components/IntroSplash';
 
 function App() {
   const path = window.location.pathname;
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <div className="w-full min-h-screen bg-black text-[#E8DFD8] selection:bg-[#cbb59d] selection:text-black">
+      <IntroSplash />
       <HeroSection />
       <AboutSection />
       <SkillsSection />
