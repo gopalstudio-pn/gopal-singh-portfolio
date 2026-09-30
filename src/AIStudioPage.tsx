@@ -1,15 +1,23 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const ratios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
 
 const models = [
-  { id: 'flux-klein-4b', name: 'FLUX.2 Klein 4B', provider: 'Cloudflare' },
-  { id: 'flux-schnell', name: 'FLUX.1 Schnell', provider: 'Cloudflare' },
-  { id: 'sdxl-lightning', name: 'SDXL Lightning', provider: 'Cloudflare' },
-  { id: 'dreamshaper', name: 'DreamShaper 8', provider: 'Cloudflare' },
-  { id: 'sdxl-base', name: 'Stable Diffusion XL', provider: 'Cloudflare' },
+  { id: 'flux-klein-4b', name: 'FLUX.2 Klein 4B', tag: 'BEST FOR FACES' },
+  { id: 'flux-schnell', name: 'FLUX.1 Schnell', tag: 'FAST' },
+  { id: 'sdxl-lightning', name: 'SDXL Lightning', tag: 'FASTEST' },
+  { id: 'dreamshaper', name: 'DreamShaper 8', tag: 'ARTISTIC' },
+  { id: 'sdxl-base', name: 'Stable Diffusion XL', tag: 'DETAILED' },
 ];
+
+const styles = [
+  { id: 'cinematic', name: 'CINEMATIC', text: 'cinematic lighting, film still, dramatic mood' },
+  { id: 'realistic', name: 'REALISTIC', text: 'ultra realistic photograph, natural light, sharp detail' },
+  { id: 'anime', name: 'ANIME', text: 'anime style, clean lines, vibrant colors' },
+  { id: 'cyberpunk', name: 'CYBERPUNK', text: 'cyberpunk city, neon lights, futuristic' },
+];
+
 
 async function shrinkImage(file: File): Promise<Blob> {
   try {
@@ -42,6 +50,9 @@ function AIStudioPage() {
   const [generatedImage, setGeneratedImage] = useState('');
   const [error, setError] = useState('');
   const [stage, setStage] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [style, setStyle] = useState('');
 
   const handleFile = (file?: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -64,7 +75,7 @@ function AIStudioPage() {
     try {
       const formData = new FormData();
 
-      formData.append('prompt', prompt.trim());
+      formData.append('prompt', prompt.trim() + (styles.find((x) => x.id === style)?.text ? ', ' + styles.find((x) => x.id === style)?.text : ''));
       formData.append('ratio', ratio);
       formData.append('model', model);
 
@@ -136,312 +147,144 @@ if (typeof imageData === 'string' && imageData) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+    useEffect(() => {
+    if (generatedImage) {
+      setHistory((h) =>
+        h.includes(generatedImage) ? h : [generatedImage, ...h].slice(0, 6)
+      );
+    }
+  }, [generatedImage]);
+
+  const refUrl = useMemo(
+    () => (reference ? URL.createObjectURL(reference) : ''),
+    [reference]
+  );
+  const current = models.find((m) => m.id === model) || models[0];
+
   return (
     <div className="min-h-screen bg-[#080808] text-[#E8DFD8]">
-      <header className="border-b border-white/10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-          <a
-            href="/"
-            className="text-xs tracking-[0.35em] text-[#E8DFD8] transition-opacity hover:opacity-60"
-          >
-            GOPAL
-          </a>
-
-          <div className="text-[10px] tracking-[0.35em] text-white/40">
-            AI STUDIO
-          </div>
-
-          <a
-            href="/"
-            className="text-[10px] tracking-[0.25em] text-white/50 transition-colors hover:text-white"
-          >
-            ← BACK
-          </a>
-        </div>
+      <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
+        <a href="/" className="text-xs tracking-[0.35em] transition-opacity hover:opacity-60">GOPAL</a>
+        <span className="text-[10px] tracking-[0.35em] text-white/40">AI STUDIO</span>
+        <a href="/" className="text-[10px] tracking-[0.25em] text-white/50 transition-colors hover:text-white">← BACK</a>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
-        <div className="max-w-4xl">
-          <p className="mb-5 text-[10px] tracking-[0.4em] text-[#BFA98E]">
-            GOPAL AI STUDIO
-          </p>
+      <main className="mx-auto max-w-3xl px-6 pb-20 pt-6">
+        <h1
+          className="text-center text-6xl uppercase leading-none tracking-tight md:text-8xl"
+          style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+        >
+          <span className="bg-gradient-to-b from-[#F7E7C4] via-[#C99E5D] to-[#543B1A] bg-clip-text text-transparent">
+            Create without limits
+          </span>
+        </h1>
+        <p className="mt-4 text-center text-[10px] tracking-[0.3em] text-white/40">
+          TURN AN IDEA OR A FACE INTO AN IMAGE
+        </p>
 
-          <h1 className="text-5xl font-light leading-[0.95] tracking-[-0.04em] md:text-8xl">
-            CREATE
-            <br />
-            WITHOUT
-            <br />
-            LIMITS.
-          </h1>
-
-          <p className="mt-8 max-w-xl text-sm leading-7 text-white/50 md:text-base">
-            Turn an idea, image, or reference into something completely new.
-          </p>
+        <div className="mt-10 flex min-h-[380px] items-center justify-center border border-[#BFA98E]/20 bg-black/40 p-2">
+          {generatedImage ? (
+            <img src={generatedImage} alt="AI generated result" className="max-h-[70vh] w-auto max-w-full object-contain" />
+          ) : generating ? (
+            <div className="text-center">
+              <div className="mx-auto mb-4 h-2 w-2 animate-pulse rounded-full bg-[#BFA98E]" />
+              <p className="text-[10px] tracking-[0.3em] text-[#BFA98E]">{stage || 'GENERATING'}</p>
+            </div>
+          ) : (
+            <p className="text-[10px] tracking-[0.3em] text-white/20">YOUR IMAGE APPEARS HERE</p>
+          )}
         </div>
 
-        <section className="mb-6 border border-white/10 bg-white/[0.025]">
-  <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-    <span className="text-[10px] tracking-[0.3em] text-white/50">
-      AI MODEL
-    </span>
-    <span className="text-[9px] tracking-[0.2em] text-white/25">
-      CHOOSE ENGINE
-    </span>
-  </div>
+        {error && <p className="mt-4 text-center text-[11px] tracking-[0.12em] text-red-200/70">{error}</p>}
 
-  <div className="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-    {models.map((item) => (
-      <button
-        key={item.id}
-        type="button"
-        onClick={() => setModel(item.id)}
-        disabled={generating}
-        className={`min-h-[90px] bg-[#080808] px-5 py-4 text-left transition-all ${
-          model === item.id
-            ? 'bg-[#BFA98E]/10 text-[#E8DFD8]'
-            : 'text-white/50 hover:bg-white/[0.04] hover:text-white'
-        }`}
-      >
-        <div className="text-[11px] tracking-[0.12em]">
-          {item.name}
-        </div>
-        <div className="mt-2 text-[8px] tracking-[0.2em] text-white/25">
-          {item.provider}
-        </div>
-      </button>
-    ))}
-  </div>
-</section>
-
-<section className="mt-20 grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
-          <div className="border border-white/10 bg-white/[0.025]">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-              <span className="text-[10px] tracking-[0.3em] text-white/50">
-                01 — PROMPT
-              </span>
-
-              <span className="text-[9px] tracking-[0.2em] text-white/25">
-                TEXT TO IMAGE
-              </span>
-            </div>
-
-            <div className="p-6">
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                maxLength={1000}
-                disabled={generating}
-                placeholder="Describe the image you want to create..."
-                className="min-h-[240px] w-full resize-none bg-transparent text-lg font-light leading-8 text-white outline-none placeholder:text-white/20 disabled:opacity-50"
-              />
-
-              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-5">
-                <span className="text-[9px] tracking-[0.2em] text-white/25">
-                  {prompt.length}/1000
-                </span>
-
-                <button
-                  type="button"
-                  onClick={handleGenerate}
-                  disabled={generating}
-                  className="border border-[#BFA98E]/40 px-7 py-3 text-[10px] tracking-[0.25em] text-[#E8DFD8] transition-all hover:bg-[#BFA98E] hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {generating ? 'GENERATING...' : 'GENERATE ↗'}
-                </button>
-              </div>
-            </div>
+        {generatedImage && (
+          <div className="mt-5 flex justify-center gap-8 text-[10px] tracking-[0.25em]">
+            <button type="button" onClick={handleDownload} className="text-[#BFA98E] hover:text-white">DOWNLOAD ↓</button>
+            <button type="button" onClick={handleCreateAgain} className="text-white/50 hover:text-white">CREATE AGAIN</button>
           </div>
+        )}
 
-          <div className="border border-white/10 bg-white/[0.025]">
-            <div className="border-b border-white/10 px-6 py-5">
-              <span className="text-[10px] tracking-[0.3em] text-white/50">
-                02 — REFERENCE
-              </span>
-            </div>
-
-            <label
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragActive(true);
-              }}
-              onDragLeave={() => setDragActive(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragActive(false);
-                handleFile(e.dataTransfer.files[0]);
-              }}
-              className={`m-6 flex min-h-[250px] cursor-pointer flex-col items-center justify-center border border-dashed transition-all ${
-                dragActive
-                  ? 'border-[#BFA98E] bg-[#BFA98E]/5'
-                  : 'border-white/15 hover:border-white/30'
-              }`}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handleFile(e.target.files?.[0])}
-              />
-
-              {reference ? (
-                <div className="px-6 text-center">
-                  <p className="text-sm text-white/80">
-                    {reference.name}
-                  </p>
-
-                  <p className="mt-2 text-[9px] tracking-[0.2em] text-[#BFA98E]">
-                    REFERENCE READY
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <span className="text-3xl font-light text-white/20">
-                    +
-                  </span>
-
-                  <span className="mt-4 text-[10px] tracking-[0.25em] text-white/45">
-                    ADD REFERENCE IMAGE
-                  </span>
-
-                  <span className="mt-2 text-[9px] text-white/20">
-                    JPG · PNG · WEBP
-                  </span>
-                </>
-              )}
-            </label>
-          </div>
-        </section>
-
-        <section className="mt-6 border border-white/10 bg-white/[0.025]">
-          <div className="border-b border-white/10 px-6 py-5">
-            <span className="text-[10px] tracking-[0.3em] text-white/50">
-              03 — FORMAT
-            </span>
-          </div>
-
-          <div className="grid grid-cols-5">
-            {ratios.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setRatio(item)}
-                disabled={generating}
-                className={`border-r border-white/10 p-5 text-center transition-all last:border-r-0 ${
-                  ratio === item
-                    ? 'bg-[#BFA98E] text-black'
-                    : 'text-white/50 hover:bg-white/[0.04] hover:text-white'
-                }`}
-              >
-                <span className="text-sm tracking-[0.15em]">
-                  {item}
-                </span>
+        {history.length > 0 && (
+          <div className="mt-6 flex justify-center gap-2">
+            {history.map((img) => (
+              <button key={img.slice(-24)} type="button" onClick={() => setGeneratedImage(img)} className="h-12 w-12 overflow-hidden border border-white/10 opacity-70 transition-opacity hover:opacity-100">
+                <img src={img} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>
+        )}
 
-          <div className="border-t border-white/10 px-6 py-4">
-            <p className="text-[9px] tracking-[0.2em] text-white/25">
-              SELECT OUTPUT RATIO · {ratio}
-            </p>
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            maxLength={1000}
+            rows={3}
+            disabled={generating}
+            placeholder="Describe the image you want to create..."
+            className="w-full resize-none bg-transparent text-base font-light leading-7 text-white outline-none placeholder:text-white/25 disabled:opacity-50"
+          />
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <label className="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-[#BFA98E]/40 text-lg text-[#BFA98E] transition-colors hover:bg-[#BFA98E]/10" title="Add reference face">
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
+                {refUrl ? <img src={refUrl} alt="" className="h-full w-full object-cover" /> : '+'}
+              </label>
+              {reference && (
+                <button type="button" onClick={() => setReference(null)} className="text-[9px] tracking-[0.2em] text-white/40 hover:text-white">REMOVE</button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleGenerate}
+              disabled={generating}
+              className="border border-[#BFA98E]/40 px-7 py-3 text-[10px] tracking-[0.25em] transition-all hover:bg-[#BFA98E] hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {generating ? 'GENERATING...' : 'GENERATE ↗'}
+            </button>
           </div>
-        </section>
+        </div>
+        {reference && model !== 'flux-klein-4b' && (
+          <p className="mt-3 text-center text-[9px] tracking-[0.2em] text-[#BFA98E]/70">REFERENCE FACE WORKS WITH FLUX.2 KLEIN 4B</p>
+        )}
 
-        {generating && (
-          <section className="mt-6 border border-[#BFA98E]/20 bg-[#BFA98E]/[0.03] px-6 py-8">
-            <div className="flex items-center gap-4">
-              <div className="h-2 w-2 animate-pulse rounded-full bg-[#BFA98E]" />
-
-              <div>
-                <p className="text-[9px] tracking-[0.3em] text-[#BFA98E]">
-                  AI ENGINE
-                </p>
-
-                <p className="mt-2 text-sm tracking-[0.12em] text-white/60">
-                  {stage}
-                </p>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+          <div className="relative">
+            <button type="button" onClick={() => setMenuOpen(!menuOpen)} disabled={generating} className="text-[11px] tracking-[0.2em]">
+              {current.name} <span className="text-[#BFA98E]">▾</span>
+            </button>
+            {menuOpen && (
+              <div className="absolute bottom-full left-0 z-20 mb-3 w-72 rounded-xl border border-white/10 bg-[#0d0d0d] py-2 shadow-2xl">
+                {models.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => { setModel(item.id); setMenuOpen(false); }}
+                    className={`flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-white/5 ${model === item.id ? 'text-[#BFA98E]' : 'text-white/70'}`}
+                  >
+                    <span className="text-[11px] tracking-[0.12em]">{item.name}</span>
+                    <span className="text-[8px] tracking-[0.2em] text-white/30">{item.tag}</span>
+                  </button>
+                ))}
               </div>
-            </div>
-          </section>
-        )}
-
-        {error && (
-          <section className="mt-6 border border-red-300/10 bg-red-300/[0.03] px-6 py-5">
-            <p className="text-[10px] tracking-[0.15em] text-red-200/70">
-              {error}
-            </p>
-          </section>
-        )}
-
-        {generatedImage && (
-          <section className="mt-20">
-            <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-5">
-              <div>
-                <p className="text-[10px] tracking-[0.3em] text-[#BFA98E]">
-                  04 — RESULT
-                </p>
-
-                <p className="mt-3 text-2xl font-light tracking-[-0.02em] text-white/90">
-                  Your creation.
-                </p>
-              </div>
-
-              <span className="text-[9px] tracking-[0.25em] text-white/25">
-                GENERATED BY GOPAL AI
-              </span>
-            </div>
-
-            <div className="border border-white/10 bg-white/[0.02] p-3 md:p-5">
-              <img
-                src={generatedImage}
-                alt="AI generated result"
-                className="mx-auto max-h-[75vh] w-auto max-w-full object-contain"
-              />
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={handleDownload}
-                className="border border-[#BFA98E]/40 px-6 py-3 text-[10px] tracking-[0.25em] text-[#E8DFD8] transition-all hover:bg-[#BFA98E] hover:text-black"
-              >
-                DOWNLOAD IMAGE ↗
-              </button>
-
-              <button
-                type="button"
-                onClick={handleCreateAgain}
-                className="border border-white/10 px-6 py-3 text-[10px] tracking-[0.25em] text-white/50 transition-all hover:border-white/30 hover:text-white"
-              >
-                CREATE AGAIN
-              </button>
-            </div>
-          </section>
-        )}
-
-        <section className="mt-20 border-t border-white/10 pt-8">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <p className="text-[9px] tracking-[0.3em] text-white/25">
-                POWERED BY
-              </p>
-
-              <p className="mt-2 text-sm tracking-[0.15em] text-white/50">
-                GOPAL AI ENGINE
-              </p>
-            </div>
-
-            <p className="text-[9px] tracking-[0.25em] text-[#BFA98E]/60">
-              GENERATION ENGINE · ONLINE
-            </p>
+            )}
           </div>
-        </section>
+          <div className="flex gap-4">
+            {ratios.map((r) => (
+              <button key={r} type="button" onClick={() => setRatio(r)} disabled={generating} className={`text-[11px] tracking-[0.15em] ${ratio === r ? 'text-[#BFA98E]' : 'text-white/35 hover:text-white'}`}>{r}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+          {styles.map((st) => (
+            <button key={st.id} type="button" onClick={() => setStyle(style === st.id ? '' : st.id)} disabled={generating} className={`text-[10px] tracking-[0.2em] ${style === st.id ? 'text-[#BFA98E]' : 'text-white/35 hover:text-white'}`}>{st.name}</button>
+          ))}
+        </div>
       </main>
 
-      <footer className="border-t border-white/10 px-6 py-8 md:px-10">
-        <div className="mx-auto flex max-w-7xl justify-between text-[9px] tracking-[0.25em] text-white/20">
-          <span>GOPAL AI STUDIO</span>
-          <span>CREATE · TRANSFORM · EDIT</span>
-        </div>
+      <footer className="px-6 py-8 text-center text-[9px] tracking-[0.25em] text-white/20">
+        GOPAL AI STUDIO · FREE ON CLOUDFLARE
       </footer>
     </div>
   );
