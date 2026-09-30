@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TiltCover } from './components/TiltCover';
 
 const books = [
   {
@@ -183,11 +184,7 @@ export const BooksPage: React.FC = () => {
                   className="group bg-[#EEE5D7] text-[#171411] p-5 shadow-2xl transition-all duration-500 hover:-translate-y-1"
                 >
                   <div className="bg-[#D8CCBC] p-6 flex justify-center overflow-hidden">
-                    <img
-                      src={book.cover}
-                      alt={book.title}
-                      className="w-full max-w-[280px] aspect-[2/3] object-cover shadow-xl transition-transform duration-700 group-hover:scale-[1.02]"
-                    />
+                    <TiltCover src={book.cover} alt={book.title} delay={index * 0.4} />
                   </div>
 
                   <div className="pt-7 px-1 pb-2">
