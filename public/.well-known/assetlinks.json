@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "np.com.pnsingh.twa",
+    "sha256_cert_fingerprints": ["F1:1B:E3:13:AE:CA:DF:84:0E:3B:33:18:60:EA:C7:D6:DE:70:BB:58:8D:9D:8F:63:8D:AD:3D:19:90:CE:D8:BC"]
+  }
+}]

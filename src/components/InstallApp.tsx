@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+const APK = '/downloads/gopal-app.apk';
+
 const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone === true;
 
 const dismissedRecently = () => {
@@ -11,12 +13,16 @@ const dismissedRecently = () => {
   }
 };
 
-const detect = () => {
+const detect = (): 'ios' | 'mac' | 'android' | null => {
   const ua = navigator.userAgent;
   const isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isMacSafari = !isIOS && /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
-  return isIOS ? 'ios' : isMacSafari ? 'mac' : null;
+  if (isIOS) return 'ios';
+  if (/Android/i.test(ua)) return 'android';
+  const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
+  return isMacSafari ? 'mac' : null;
 };
+
+const row = 'flex w-full items-center justify-between border border-[#8C6D4F]/40 px-5 py-3 text-left transition-colors hover:border-[#D4AF37]';
 
 export const InstallApp = () => {
   const [deferred, setDeferred] = useState<any>(null);
@@ -50,17 +56,20 @@ export const InstallApp = () => {
     };
   }, [hidden]);
 
-  const install = async () => {
-    if (deferred) {
-      deferred.prompt();
-      try {
-        const c = await deferred.userChoice;
-        if (c.outcome === 'accepted') setHidden(true);
-      } catch {}
-      setDeferred(null);
-      return;
-    }
-    setSheet(true);
+  const prompt = async () => {
+    if (!deferred) return;
+    deferred.prompt();
+    try {
+      const c = await deferred.userChoice;
+      if (c.outcome === 'accepted') setHidden(true);
+    } catch {}
+    setDeferred(null);
+    setSheet(false);
+  };
+
+  const onMain = () => {
+    if (platform) setSheet(true);
+    else prompt();
   };
 
   const dismiss = () => {
@@ -84,7 +93,7 @@ export const InstallApp = () => {
           className="pointer-events-auto flex items-center overflow-hidden rounded-b-2xl border border-t-0 border-[#D4AF37]/35 bg-black/60 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md"
           style={{ animation: 'installDrop .8s cubic-bezier(.16,1,.3,1) both' }}
         >
-          <button type="button" onClick={install} aria-label="Download the Gopal app" className="group flex items-center gap-2.5 py-1.5 pl-4 pr-3" style={{ cursor: 'pointer' }}>
+          <button type="button" onClick={onMain} aria-label="Download the Gopal app" className="group flex items-center gap-2.5 py-1.5 pl-4 pr-3" style={{ cursor: 'pointer' }}>
             <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full border border-[#D4AF37]/60 text-[#D4AF37] transition-transform duration-300 group-hover:translate-y-[1px]">
               <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 1.5v7M3 6l3 3 3-3M2 10.5h8" />
@@ -110,16 +119,40 @@ export const InstallApp = () => {
           >
             <div className="mx-auto h-px w-16 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
             <p className="mt-6 text-[10px] tracking-[0.4em] text-[#D4AF37]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              INSTALL GOPAL APP
+              {platform === 'android' ? 'GET THE APP' : 'INSTALL GOPAL APP'}
             </p>
-            <ol className="mt-7 space-y-4 text-left">
-              {steps.map((s, i) => (
-                <li key={i} className="flex items-start gap-4 text-sm font-light text-white/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                  <span className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/50 text-[10px] text-[#D4AF37]">{i + 1}</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ol>
+
+            {platform === 'android' ? (
+              <div className="mt-7 space-y-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                {deferred && (
+                  <button type="button" onClick={prompt} className={row} style={{ cursor: 'pointer' }}>
+                    <span>
+                      <span className="block text-[10px] tracking-[0.3em] text-[#EAD8C7]">INSTALL APP</span>
+                      <span className="mt-1 block text-[10px] font-light text-white/40">Fastest. Updates itself.</span>
+                    </span>
+                    <span className="text-[#D4AF37]">→</span>
+                  </button>
+                )}
+                <a href={APK} download className={row} style={{ cursor: 'pointer' }}>
+                  <span>
+                    <span className="block text-[10px] tracking-[0.3em] text-[#EAD8C7]">DOWNLOAD APK</span>
+                    <span className="mt-1 block text-[10px] font-light text-white/40">Android file, 1.4 MB.</span>
+                  </span>
+                  <span className="text-[#D4AF37]">↓</span>
+                </a>
+                <p className="pt-2 text-[10px] font-light leading-relaxed text-white/40">If Android asks, allow installs from this browser.</p>
+              </div>
+            ) : (
+              <ol className="mt-7 space-y-4 text-left">
+                {steps.map((s, i) => (
+                  <li key={i} className="flex items-start gap-4 text-sm font-light text-white/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <span className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/50 text-[10px] text-[#D4AF37]">{i + 1}</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
+
             <button type="button" onClick={() => setSheet(false)} className="mt-8 border border-[#8C6D4F]/50 px-6 py-2 text-[10px] tracking-[0.3em] text-[#EAD8C7] transition-colors hover:border-[#D4AF37]" style={{ cursor: 'pointer', fontFamily: "'Montserrat', sans-serif" }}>
               GOT IT
             </button>
