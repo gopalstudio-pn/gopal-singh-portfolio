@@ -7,6 +7,7 @@ import { SmoothScroll } from './components/SmoothScroll';
 import { CinematicFX } from './components/CinematicFX';
 import { CursorGlow, Magnetic, PageCurtain, EasterEgg } from './components/Interactions';
 import { DepthTilt } from './components/DepthTilt';
+import { InstallApp } from './components/InstallApp';
 import './index.css';
 
 const BooksPage = lazy(() => import('./BooksPage'));
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <PageCurtain />
       <EasterEgg />
       <DepthTilt />
+      <InstallApp />
       <Suspense fallback={<div style={{ minHeight: '100vh', background: '#000' }} />}>
         <Routes>
           <Route path="/" element={<App />} />
