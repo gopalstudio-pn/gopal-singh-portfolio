@@ -30,21 +30,23 @@ export default function GalaxyScene() {
     const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTex;
 
-    const gold = new THREE.MeshPhysicalMaterial({ color: 0xd4af37, metalness: 1, roughness: 0.22, clearcoat: 0.6, clearcoatRoughness: 0.2 });
     const emblem = new THREE.Group();
-    const tube = 0.28;
-    const ringR = 1.2;
-    const arcGeo = new THREE.TorusGeometry(ringR, tube, 32, 96, Math.PI * 1.78);
-    const arc = new THREE.Mesh(arcGeo, gold);
-    arc.rotation.z = Math.PI * 0.222;
-    const barGeo = new THREE.BoxGeometry(0.95, 0.5, tube * 2);
-    const bar = new THREE.Mesh(barGeo, gold);
-    bar.position.set(1.0, 0, 0);
-    const capGeo = new THREE.SphereGeometry(tube, 32, 24);
-    const cap = new THREE.Mesh(capGeo, gold);
-    cap.position.set(ringR * Math.cos(Math.PI * 0.222), ringR * Math.sin(Math.PI * 0.222), 0);
-    emblem.add(arc, bar, cap);
-    emblem.scale.setScalar(1.15);
+    const logoGeo = new THREE.PlaneGeometry(1, 1);
+    const logoMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+    const logoMesh = new THREE.Mesh(logoGeo, logoMat);
+    emblem.add(logoMesh);
+    let logoTex: THREE.Texture | null = null;
+    new THREE.TextureLoader().load('/gopal-logo.png', (tx) => {
+      tx.colorSpace = THREE.SRGBColorSpace;
+      tx.anisotropy = 4;
+      const img: any = tx.image;
+      const ar = img && img.width && img.height ? img.width / img.height : 1;
+      logoMesh.scale.set(1.5 * ar, 1.5, 1);
+      logoMat.map = tx;
+      logoMat.opacity = 1;
+      logoMat.needsUpdate = true;
+      logoTex = tx;
+    });
     scene.add(emblem);
 
     const count = small ? 1800 : 4200;
@@ -127,12 +129,11 @@ export default function GalaxyScene() {
       io.disconnect();
       ro.disconnect();
       mount.removeEventListener('pointermove', move);
-      arcGeo.dispose();
-      barGeo.dispose();
-      capGeo.dispose();
+      logoGeo.dispose();
+      logoMat.dispose();
+      if (logoTex) logoTex.dispose();
       pGeo.dispose();
       pMat.dispose();
-      gold.dispose();
       envTex.dispose();
       pmrem.dispose();
       renderer.dispose();

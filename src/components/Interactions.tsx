@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const isCoarse = () => window.matchMedia('(pointer: coarse)').matches;
 const isReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -222,20 +223,55 @@ export const EasterEgg = () => {
   );
 };
 
-export const NameMarquee = () => {
-  const item = 'GOPAL SINGH  ✦  CREATOR  ✦  DEVELOPER  ✦  LIFELONG LEARNER  ✦  ';
-  return (
-    <div aria-hidden="true" className="relative w-full select-none overflow-hidden border-y border-white/10 bg-black py-6">
-      <div
-        className="marquee-track flex w-max whitespace-nowrap"
-        style={{ animation: 'marquee 32s linear infinite', willChange: 'transform', fontFamily: "'Bebas Neue', sans-serif" }}
+export const NameMarquee = () => (
+  <section aria-label="Gopal Singh" className="relative w-full bg-black px-6 py-24 text-center sm:py-32">
+    <motion.div
+      initial={{ scaleX: 0, opacity: 0 }}
+      whileInView={{ scaleX: 1, opacity: 1 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+      className="mx-auto h-px w-44 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+    />
+    <motion.h2
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      className="mt-12 pl-[0.5em] text-[clamp(1.6rem,4.6vw,3.4rem)] uppercase tracking-[0.5em]"
+      style={{ fontFamily: "'Cinzel', serif", fontWeight: 600 }}
+    >
+      <motion.span
+        initial={{ backgroundPosition: '200% 0' }}
+        whileInView={{ backgroundPosition: '-100% 0' }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 2.8, delay: 0.8, ease: 'easeInOut' }}
+        style={{
+          backgroundImage: 'linear-gradient(110deg, #EAD8C7 38%, #FFF6DC 50%, #EAD8C7 62%)',
+          backgroundSize: '250% 100%',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}
       >
-        {[0, 1].map((i) => (
-          <span key={i} className="text-[clamp(3rem,8vw,6.5rem)] leading-none tracking-[0.06em]" style={{ color: 'transparent', WebkitTextStroke: '1px rgba(212,175,55,0.55)' }}>
-            {item.repeat(3)}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-};
+        Gopal Singh
+      </motion.span>
+    </motion.h2>
+    <motion.p
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="mt-6 pl-[0.45em] text-[10px] tracking-[0.45em] text-[#C4B29E]"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      CREATOR <span className="mx-2 text-[#D4AF37]">·</span> DEVELOPER <span className="mx-2 text-[#D4AF37]">·</span> LIFELONG LEARNER
+    </motion.p>
+    <motion.div
+      initial={{ scaleX: 0, opacity: 0 }}
+      whileInView={{ scaleX: 1, opacity: 1 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 1.4, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="mx-auto mt-12 h-px w-44 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+    />
+  </section>
+);
