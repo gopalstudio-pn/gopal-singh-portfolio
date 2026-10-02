@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap');
 @import "tailwindcss";
 html, body {
   margin: 0;
@@ -17,3 +16,25 @@ html, body {
     transform: translateY(0);
   }
 }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+@media (max-width: 767px) { .about-light { display: none; } }
+
+@keyframes letterIn { from { opacity: 0; transform: translateY(45%) scale(.96); filter: blur(10px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes grainShift { 0% { transform: translate(0,0); } 25% { transform: translate(-2%,1%); } 50% { transform: translate(1%,-2%); } 75% { transform: translate(2%,2%); } 100% { transform: translate(0,0); } }
+@keyframes leakDrift { from { transform: translate3d(-4%,0,0); opacity: .55; } to { transform: translate3d(4%,2%,0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .fx-grain, .fx-leak { animation: none !important; } }
+
+.glass-card { background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.012)); will-change: transform; }
+.glass-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), rgba(212,175,55,.16), transparent 45%); opacity: 0; transition: opacity .35s; pointer-events: none; }
+.glass-card:hover::before { opacity: 1; }
+.glass-card > * { position: relative; }
+@media (min-width: 1024px) { .skills-bento > :first-child { grid-column: span 2; } }
+@keyframes eggIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spark { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; } }
+@keyframes marquee { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+@keyframes curtainIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes curtainOut { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none !important; } }

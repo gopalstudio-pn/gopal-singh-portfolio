@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CollectorCard } from './components/CollectorCard';
 import { MoviePoster } from './components/MoviePoster';
+import { Carousel3D } from './components/Carousel3D';
 
 const ratios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
 
@@ -212,15 +213,7 @@ if (typeof imageData === 'string' && imageData) {
           </div>
         )}
 
-        {history.length > 0 && (
-          <div className="mt-6 flex justify-center gap-2">
-            {history.map((img) => (
-              <button key={img.slice(-24)} type="button" onClick={() => setGeneratedImage(img)} className="h-12 w-12 overflow-hidden border border-white/10 opacity-70 transition-opacity hover:opacity-100">
-                <img src={img} alt="" className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
+        {history.length > 0 && <Carousel3D images={history} onSelect={setGeneratedImage} />}
 
         <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur">
           <textarea

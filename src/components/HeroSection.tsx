@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useScroll, useTransform } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import watermarkImg from '../assets/watermark.png';
+import { SplitText } from './SplitText';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -37,13 +38,23 @@ const navItems = [
 ];
 
 export const HeroSection: React.FC = () => {
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
+  const mx = useMotionValue(-100);
+  const my = useMotionValue(-100);
+  const sx = useSpring(mx, { damping: 30, stiffness: 350, mass: 0.5 });
+  const sy = useSpring(my, { damping: 30, stiffness: 350, mass: 0.5 });
+  const [cursorOn, setCursorOn] = useState(false);
+  const { scrollY } = useScroll();
+  const bgScale = useTransform(scrollY, [0, 600], [1, 1.12]);
+  const bgY = useTransform(scrollY, [0, 600], [0, 50]);
+  const bgFade = useTransform(scrollY, [0, 600], [1, 0.35]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      mx.set(e.clientX);
+      my.set(e.clientY);
+      setCursorOn(true);
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
@@ -52,22 +63,23 @@ export const HeroSection: React.FC = () => {
   return (
     <section className="relative w-screen h-screen overflow-hidden bg-black text-[#E8DFD8] font-sans selection:bg-[#cbb59d] selection:text-black cursor-none">
       {/* ================= 1. MINIMAL CUSTOM CURSOR ================= */}
-      {cursorPos.x >= 0 && (
+      {cursorOn && (
         <motion.div
           className="fixed top-0 left-0 pointer-events-none z-50 rounded-full border border-[#D4AF37]/40 flex items-center justify-center backdrop-blur-[1px]"
           animate={{
-            x: cursorPos.x - (isHovered ? 24 : 5),
-            y: cursorPos.y - (isHovered ? 24 : 5),
+            marginLeft: isHovered ? -24 : -5,
+            marginTop: isHovered ? -24 : -5,
             width: isHovered ? 48 : 10,
             height: isHovered ? 48 : 10,
             backgroundColor: isHovered ? 'rgba(212, 175, 55, 0.1)' : 'rgba(235, 215, 195, 0.95)',
           }}
+          style={{ x: sx, y: sy }}
           transition={{ type: 'spring', damping: 30, stiffness: 350, mass: 0.5 }}
         />
       )}
 
 {/* ================= 2. FIXED IMAGE HERO LAYER ================= */}
-<div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
+<motion.div style={{ scale: bgScale, y: bgY, opacity: bgFade }} className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black will-change-transform">
 
 <picture>
 <source
@@ -94,14 +106,14 @@ md:landscape:object-contain
   {/* Subtle overall cinematic shadow */}
   <div className="absolute inset-0 bg-black/10" />
 
-</div>
+</motion.div>
       {/* ================= 4. CONTENT LAYER ================= */}
       <div className="relative z-10 flex flex-col justify-between h-full w-full px-6 sm:px-12 lg:px-16 pt-6 pb-8 pointer-events-none">
         
         {/* Navigation Bar */}
         <header className="relative flex items-center justify-between w-full pointer-events-auto">
           <a
-            href="#"
+            data-egg href="#"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-[#EAD8C7] hover:opacity-75 transition-opacity"
@@ -131,7 +143,7 @@ md:landscape:object-contain
 
           {/* Right Action */}
           <a
-            href="#contact"
+            data-magnetic href="#contact"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className="group flex items-center space-x-2 text-[11px] tracking-[0.24em] font-light uppercase py-2 px-4 border border-[#8C6D4F]/50 hover:border-[#D4AF37] text-[#EAD8C7] transition-all duration-300 backdrop-blur-sm ml-auto md:ml-0"
@@ -190,25 +202,22 @@ md:landscape:object-contain
             className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[37rem] xl:max-w-[40rem] pointer-events-auto z-20"
           >
             {/* Massive Condensed Headline */}
-            <motion.div variants={fadeUpVariants} className="relative mb-3.5 select-none">
+            <motion.div variants={fadeUpVariants} data-depth="1" className="relative mb-3.5 select-none">
               <h1
                 className="text-6xl sm:text-7xl md:text-[length:min(6rem,13vh)] lg:text-[length:min(7.2rem,13vh)] xl:text-[length:min(7.8rem,13vh)] tracking-tight uppercase leading-[0.83]"
                 style={{ fontFamily: "'Bebas Neue', sans-serif" }}
               >
                 {/* Line 1: I BUILD */}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#D5CBC0] to-[#605448] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
-                  IDEAS
-                </span>
+                <span className="block drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+                  <SplitText text="IDEAS" gradient="text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#D5CBC0] to-[#605448]" delay={0.3} /></span>
 
                 {/* Line 2: DIGITAL */}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#F7E7C4] via-[#C99E5D] to-[#543B1A] drop-shadow-[0_8px_25px_rgba(201,158,93,0.35)]">
-                  INTO
-                </span>
+                <span className="block drop-shadow-[0_8px_25px_rgba(201,158,93,0.35)]">
+                  <SplitText text="INTO" gradient="text-transparent bg-clip-text bg-gradient-to-b from-[#F7E7C4] via-[#C99E5D] to-[#543B1A]" delay={0.7} /></span>
 
                 {/* Line 3: EXPERIENCES */}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#DFBE8A] via-[#9B7640] to-[#342410] drop-shadow-[0_10px_30px_rgba(155,118,64,0.4)]">
-                  REALITY
-                </span>
+                <span className="block drop-shadow-[0_10px_30px_rgba(155,118,64,0.4)]">
+                  <SplitText text="REALITY" gradient="text-transparent bg-clip-text bg-gradient-to-b from-[#DFBE8A] via-[#9B7640] to-[#342410]" delay={1.1} /></span>
               </h1>
             </motion.div>
 
@@ -243,7 +252,7 @@ md:landscape:object-contain
             >
               {/* Explore My Work CTA */}
               <motion.a
-                href="/books"
+                data-magnetic href="/books"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 whileHover={{ scale: 1.02 }}
@@ -260,7 +269,7 @@ md:landscape:object-contain
 
           {/* RIGHT: Floating Quote & Signature Card */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            data-depth="2" initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="hidden lg:flex flex-col items-start pointer-events-auto pr-24 xl:pr-36 mr-4 z-20 select-none"

@@ -37,6 +37,8 @@ export const IntroSplash: React.FC = () => {
       className={`fixed inset-0 z-[100] flex items-center justify-center bg-black transition-opacity duration-700 ${fade ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
     >
       <style>{css}</style>
+      <div className="absolute left-0 right-0 top-[12vh] h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" style={{ animation: 'introFade 1.2s ease-out 0.2s both' }} />
+      <div className="absolute left-0 right-0 bottom-[12vh] h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" style={{ animation: 'introFade 1.2s ease-out 0.2s both' }} />
       <div className="relative flex flex-col items-center">
         <div
           className="absolute h-64 w-64 rounded-full"
@@ -65,6 +67,7 @@ export const IntroSplash: React.FC = () => {
         >
           PORTFOLIO
         </p>
+        <p className="relative mt-3 text-[9px] tracking-[0.5em] text-[#8C6D4F]" style={{ fontFamily: "'Montserrat', sans-serif", animation: 'introFade 1.2s ease-out 1.8s both' }}>A FILM BY GOPAL SINGH</p>
       </div>
     </div>
   );

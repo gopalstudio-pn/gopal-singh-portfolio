@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { AIOrb, Waveform } from './AIOrb';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -13,6 +14,7 @@ export const AskGopal: React.FC = () => {
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const [lang, setLang] = useState('en');
   const [msgs, setMsgs] = useState<Msg[]>([
     { role: 'assistant', content: "Hi! I'm Ask Gopal AI. Ask me about Gopal's skills, his Library or his AI Studio. You can type or use the mic." },
@@ -20,6 +22,7 @@ export const AskGopal: React.FC = () => {
   const endRef = useRef<HTMLDivElement>(null);
   const recRef = useRef<any>(null);
   const voiceRef = useRef(false);
+  const uRef = useRef<any>(null);
 
   const SR: any =
     typeof window !== 'undefined'
@@ -42,6 +45,10 @@ export const AskGopal: React.FC = () => {
       .find((x) => x.lang.toLowerCase().startsWith(cur.speech.slice(0, 2)));
     if (v) u.voice = v;
     u.rate = 0.95;
+    uRef.current = u;
+    u.onstart = () => { if (uRef.current === u) setSpeaking(true); };
+    u.onend = () => { if (uRef.current === u) setSpeaking(false); };
+    u.onerror = () => { if (uRef.current === u) setSpeaking(false); };
     window.speechSynthesis.speak(u);
   };
 
@@ -96,6 +103,8 @@ export const AskGopal: React.FC = () => {
 
   const close = () => {
     if (canSpeak) window.speechSynthesis.cancel();
+    uRef.current = null;
+    setSpeaking(false);
     setOpen(false);
   };
 
@@ -112,6 +121,7 @@ export const AskGopal: React.FC = () => {
               <button type="button" onClick={close} className="ml-1 text-white/50 hover:text-white">✕</button>
             </div>
           </div>
+          {(listening || speaking) && <Waveform kind={listening ? "listen" : "speak"} />}
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {msgs.map((m, i) => (
               <div key={i} className={m.role === 'user' ? 'text-right' : 'text-left'}>
@@ -144,9 +154,10 @@ export const AskGopal: React.FC = () => {
         type="button"
         onClick={() => (open ? close() : setOpen(true))}
         aria-label="Ask Gopal AI"
-        className="ml-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-black text-xl text-[#D4AF37] shadow-[0_0_30px_rgba(212,175,55,0.35)] transition-transform hover:scale-105"
+        className="relative overflow-hidden ml-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-black text-xl text-[#D4AF37] shadow-[0_0_30px_rgba(212,175,55,0.35)] transition-transform hover:scale-105"
       >
-        {open ? '✕' : '✦'}
+        <AIOrb mode={listening ? 'listening' : speaking ? 'speaking' : busy ? 'thinking' : 'idle'} />
+        {open && <span className="absolute text-base text-[#F7E7C4]">✕</span>}
       </button>
     </div>
   );

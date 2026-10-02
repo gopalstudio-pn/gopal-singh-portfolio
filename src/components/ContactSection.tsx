@@ -117,7 +117,7 @@ export const ContactSection: React.FC = () => {
                     { name: 'Gmail', icon: '/gmail.png', href: 'mailto:gopalsingh.pn@gmail.com' },
                   ].map((social, index) => (
                     <motion.a
-                      key={social.name}
+                      data-magnetic key={social.name}
                       href={social.href}
                       target={social.name === 'Gmail' ? undefined : '_blank'}
                       rel={social.name === 'Gmail' ? undefined : 'noopener noreferrer'}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TiltCover } from './components/TiltCover';
+import { BookShelfSection } from './components/BookShelfSection';
 
 const books = [
   {
@@ -169,6 +170,8 @@ export const BooksPage: React.FC = () => {
             </div>
           )}
 
+          <BookShelfSection books={books} />
+
           <div className="mt-20 flex items-center gap-5">
             <p className="text-[10px] tracking-[0.3em] uppercase text-[#8C6D4F]">
               MY COLLECTION
@@ -181,6 +184,7 @@ export const BooksPage: React.FC = () => {
               {filteredBooks.map((book, index) => (
                 <article
                   key={book.title}
+                  id={"book-" + book.title.replace(/[^a-z0-9]/gi, "-")}
                   className="group bg-[#EEE5D7] text-[#171411] p-5 shadow-2xl transition-all duration-500 hover:-translate-y-1"
                 >
                   <div className="bg-[#D8CCBC] p-6 flex justify-center overflow-hidden">
