@@ -32,6 +32,7 @@ const navItems = [
   { name: 'ABOUT', href: '#about' },
   { name: 'LIBRARY', href: '/books' },
   { name: 'AI STUDIO', href: '/ai-studio' },
+  { name: 'TOOLS', href: '/tools' },
   { name: 'SKILLS', href: '#skills' },
   { name: 'EDUCATION', href: '#experience' },
   { name: 'CONTACT', href: '#contact' },

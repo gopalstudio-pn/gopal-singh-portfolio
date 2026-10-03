@@ -13,6 +13,8 @@ import './index.css';
 const BooksPage = lazy(() => import('./BooksPage'));
 const AIStudioPage = lazy(() => import('./AIStudioPage'));
 const ConnectPage = lazy(() => import('./ConnectPage'));
+const NameStudioPage = lazy(() => import('./NameStudioPage'));
+const ToolsPage = lazy(() => import('./ToolsPage'));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -31,6 +33,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/books" element={<BooksPage />} />
           <Route path="/ai-studio" element={<AIStudioPage />} />
           <Route path="/connect" element={<ConnectPage />} />
+          <Route path="/tools" element={<ToolsPage />} />
+          <Route path="/tools/name-studio" element={<NameStudioPage />} />
         </Routes>
       </Suspense>
       <AskGopal />

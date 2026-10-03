@@ -7,6 +7,7 @@ import { ContactSection } from './components/ContactSection';
 import { IntroSplash } from './components/IntroSplash';
 import { NameMarquee } from './components/Interactions';
 import { GalaxySection } from './components/GalaxySection';
+import { ToolsTeaser } from './components/ToolsTeaser';
 import { GlobeSection } from './components/GlobeSection';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <AboutSection />
       <SkillsSection />
       <NameMarquee />
+      <ToolsTeaser />
       <ExperienceSection />
       <GalaxySection />
       <GlobeSection />
