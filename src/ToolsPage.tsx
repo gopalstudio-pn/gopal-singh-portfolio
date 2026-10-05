@@ -105,11 +105,12 @@ export default function ToolsPage() {
           delay={0.15}
         />
         <Tool
+          href="/tools/nepali-date"
           icon="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"
           title="NEPALI DATE CONVERTER"
-          desc="Bikram Sambat to English dates, plus an age calculator."
-          preview={<span className="block text-2xl text-white/40" style={mont}>२०८३ ↔ 2026</span>}
-          tag="SOON"
+          desc="BS and AD dates, today in Nepal and an exact age calculator."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>२०८३ ↔ 2026</span>}
+          tag="NEW"
           delay={0.2}
         />
         <Tool
