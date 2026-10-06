@@ -67,6 +67,16 @@
           "sizes": "192x192"
         }
       ]
+    },
+    {
+      "name": "WhatsApp & QR",
+      "url": "/tools/qr",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

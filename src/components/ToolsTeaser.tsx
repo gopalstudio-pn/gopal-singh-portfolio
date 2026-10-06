@@ -10,6 +10,8 @@ const CARDS = [
   ['STYLISH TEXT', '60 fancy styles for Instagram, WhatsApp and game names.', '/tools/name-studio#stylish'],
   ['NAME LOGO', 'Turn your name into a logo or a profile picture.', '/tools/name-studio#logo'],
   ['SIGNATURE', 'A handwritten signature, ready as a transparent PNG.', '/tools/name-studio#signature'],
+  ['NEPALI DATE', 'Convert BS and AD dates and work out your exact age.', '/tools/nepali-date'],
+  ['WHATSAPP & QR', 'Chat links and QR codes for links, Wi-Fi and contact cards.', '/tools/qr'],
 ];
 
 export const ToolsTeaser = () => {
@@ -56,7 +58,7 @@ export const ToolsTeaser = () => {
           </div>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-3">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CARDS.map(([t, d, h], i) => (
             <BentoCard key={t} delay={i * 0.06}>
               <a href={h} className="flex h-full flex-col gap-3">

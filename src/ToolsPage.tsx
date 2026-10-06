@@ -114,11 +114,12 @@ export default function ToolsPage() {
           delay={0.2}
         />
         <Tool
+          href="/tools/qr"
           icon="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z"
           title="WHATSAPP LINK & QR"
-          desc="Make a click-to-chat link and a QR code in one step."
-          preview={<span className="block text-2xl text-white/40" style={mont}>wa.me · QR</span>}
-          tag="SOON"
+          desc="Make a chat link, a QR code for any link, Wi-Fi or contact card."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>wa.me · QR</span>}
+          tag="NEW"
           delay={0.25}
         />
       </div>

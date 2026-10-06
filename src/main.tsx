@@ -14,6 +14,7 @@ const BooksPage = lazy(() => import('./BooksPage'));
 const AIStudioPage = lazy(() => import('./AIStudioPage'));
 const ConnectPage = lazy(() => import('./ConnectPage'));
 const NameStudioPage = lazy(() => import('./NameStudioPage'));
+const QrPage = lazy(() => import('./QrPage'));
 const NepaliDatePage = lazy(() => import('./NepaliDatePage'));
 const ToolsPage = lazy(() => import('./ToolsPage'));
 
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/connect" element={<ConnectPage />} />
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/tools/name-studio" element={<NameStudioPage />} />
+          <Route path="/tools/qr" element={<QrPage />} />
           <Route path="/tools/nepali-date" element={<NepaliDatePage />} />
         </Routes>
       </Suspense>
