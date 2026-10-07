@@ -67,3 +67,12 @@ html, body { background-color: #0A0908; }
   .text-white\/70 { color: color-mix(in oklab, var(--color-white) 87%, transparent); }
   .text-\[\#8C6D4F\] { color: #A98862; }
 }
+
+/* LOGO ORBIT: compact animated logo */
+@keyframes logoOrbit {
+  0% { transform: translateY(0) rotateY(-28deg); }
+  50% { transform: translateY(-8px) rotateY(0deg); }
+  100% { transform: translateY(0) rotateY(28deg); }
+}
+.logo-orbit { animation: logoOrbit 7s ease-in-out infinite alternate; filter: drop-shadow(0 0 22px rgba(212, 175, 55, 0.28)); will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .logo-orbit { animation: none; } }

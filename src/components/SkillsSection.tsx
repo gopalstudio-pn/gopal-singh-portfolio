@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { BentoCard } from './BentoCard';
-import { ShapesBackdrop } from './ShapesBackdrop';
 
 const skillGroups = [
   {
@@ -37,7 +36,6 @@ export const SkillsSection: React.FC = () => {
       id="skills"
       className="relative w-full overflow-hidden bg-black px-6 py-24 text-[#E8DFD8] sm:px-12 lg:px-20 lg:py-32"
     >
-      <ShapesBackdrop />
       <div className="pointer-events-none absolute left-1/2 top-1/3 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[#D4AF37]/[0.035] blur-[140px]" />
 
       <div className="relative z-10 mx-auto max-w-6xl">
