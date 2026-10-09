@@ -14,6 +14,44 @@ const MODELS = {
 
 const STREAM_MODELS = ["sdxl-lightning", "dreamshaper", "sdxl-base"];
 
+const SEO_SITE = "https://pnsingh.com.np";
+
+type SeoPage = { title: string; desc: string; app?: string };
+
+const SEO_PAGES: Record<string, SeoPage> = {
+  "/tools": {
+    title: "Free Online Tools",
+    desc: "Free tools by Gopal Studio: a stylish name generator, name logo and signature maker, Nepali date converter and WhatsApp link and QR maker. No sign-up.",
+  },
+  "/tools/name-studio": {
+    title: "Stylish Name Generator, Logo & Signature Maker",
+    desc: "Turn your name into 60 stylish fonts, a logo or a handwritten signature. Free, instant and no sign-up. Copy or download in seconds.",
+    app: "DesignApplication",
+  },
+  "/tools/nepali-date": {
+    title: "Nepali Date Converter & Age Calculator",
+    desc: "Convert Bikram Sambat to English dates and back, see today's Nepali date and calculate your exact age. Free and fast.",
+    app: "UtilitiesApplication",
+  },
+  "/tools/qr": {
+    title: "WhatsApp Link & QR Code Maker",
+    desc: "Create a WhatsApp chat link and QR codes for links, Wi-Fi and contact cards. Free, private and made on your device.",
+    app: "UtilitiesApplication",
+  },
+  "/books": {
+    title: "Library",
+    desc: "Gopal Singh's library of books on money, habits, startups and personal growth.",
+  },
+  "/ai-studio": {
+    title: "AI Studio",
+    desc: "Create AI images, movie posters and collector cards in your browser with Gopal Studio's AI Studio.",
+  },
+  "/connect": {
+    title: "Connect",
+    desc: "Connect with Gopal Singh on Instagram, YouTube, WhatsApp, Facebook, TikTok and email.",
+  },
+};
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -197,11 +235,54 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
 
     let response = await env.ASSETS.fetch(request);
 
-    // SPA fallback for React Router
+    // SPA fallback for React Router, with per-page SEO tags in the HTML
     if (response.status === 404) {
-      return env.ASSETS.fetch(
-        new Request(new URL("/", request.url))
-      );
+      const home = await env.ASSETS.fetch(new Request(new URL("/", request.url)));
+      const path = url.pathname.replace(/\/+$/, "") || "/";
+      const page = SEO_PAGES[path];
+      if (!page || !home.ok) return home;
+
+      const title = page.title + " | Gopal Studio";
+      const canonical = SEO_SITE + path;
+      const setContent = (value: string) => ({
+        element(el: any) {
+          el.setAttribute("content", value);
+        },
+      });
+      let extra = '<link rel="canonical" href="' + canonical + '" /><meta property="og:url" content="' + canonical + '" />';
+      if (page.app) {
+        const ld = {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: page.title,
+          url: canonical,
+          description: page.desc,
+          applicationCategory: page.app,
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          author: { "@type": "Person", name: "Gopal Singh", url: SEO_SITE + "/" },
+        };
+        extra += '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, "\\u003c") + "</script>";
+      }
+
+      return new HTMLRewriter()
+        .on("title", {
+          element(el: any) {
+            el.setInnerContent(title);
+          },
+        })
+        .on('meta[name="description"]', setContent(page.desc))
+        .on('meta[property="og:title"]', setContent(title))
+        .on('meta[property="og:description"]', setContent(page.desc))
+        .on('meta[name="twitter:title"]', setContent(title))
+        .on('meta[name="twitter:description"]', setContent(page.desc))
+        .on("head", {
+          element(el: any) {
+            el.append(extra, { html: true });
+          },
+        })
+        .transform(home);
     }
 
     return response;
