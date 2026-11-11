@@ -17,6 +17,7 @@ const NameStudioPage = lazy(() => import('./NameStudioPage'));
 const QrPage = lazy(() => import('./QrPage'));
 const NepaliDatePage = lazy(() => import('./NepaliDatePage'));
 const ToolsPage = lazy(() => import('./ToolsPage'));
+const ImageCompressorPage = lazy(() => import('./ImageCompressorPage'));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/tools/name-studio" element={<NameStudioPage />} />
           <Route path="/tools/qr" element={<QrPage />} />
           <Route path="/tools/nepali-date" element={<NepaliDatePage />} />
+          <Route path="/tools/image-compressor" element={<ImageCompressorPage />} />
         </Routes>
       </Suspense>
       <AskGopal />

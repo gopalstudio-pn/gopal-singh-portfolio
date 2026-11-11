@@ -38,6 +38,11 @@ const SEO_PAGES: Record<string, SeoPage> = {
     desc: "Create a WhatsApp chat link and QR codes for links, Wi-Fi and contact cards. Free, private and made on your device.",
     app: "UtilitiesApplication",
   },
+  "/tools/image-compressor": {
+    title: "Image Compressor   "/books": { Resizer",
+    desc: "Compress and resize photos online. Make JPG or WebP images smaller without losing quality. Free, private, runs on your device.",
+    app: "UtilitiesApplication",
+  },
   "/books": {
     title: "Library",
     desc: "Gopal Singh's library of books on money, habits, startups and personal growth.",

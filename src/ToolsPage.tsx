@@ -122,6 +122,15 @@ export default function ToolsPage() {
           tag="NEW"
           delay={0.25}
         />
+        <Tool
+          href="/tools/image-compressor"
+          icon="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"
+          title="IMAGE COMPRESSOR"
+          desc="Make photos smaller and resize them. Private, nothing is uploaded."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>4 MB → 400 KB</span>}
+          tag="NEW"
+          delay={0.3}
+        />
       </div>
 
       <p className="mt-14 text-center text-xs font-light text-white/40" style={mont}>
