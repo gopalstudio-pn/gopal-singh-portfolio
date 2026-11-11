@@ -206,6 +206,38 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
       }
     }
 
+        if (url.pathname === "/api/summarize" && request.method === "POST") {
+      try {
+        const data: any = await request.json();
+        const text = String(data.text || "").trim().slice(0, 6000);
+        if (text.length < 50) {
+          return Response.json({ success: false, error: "Please paste at least a few sentences." }, { status: 400 });
+        }
+        const langs: Record<string, string> = {
+          en: "English",
+          ne: "Nepali, written in Devanagari script",
+          hi: "Hindi, written in Devanagari script",
+        };
+        const modes: Record<string, string> = {
+          short: "Write a short summary in 3 to 4 sentences.",
+          points: "List the 5 most important key points as short bullet points starting with a dash.",
+          simple: "Explain the text in very simple words, as if to a 12 year old, in 4 to 6 short sentences.",
+        };
+        const lang = langs[String(data.lang)] || langs.en;
+        const mode = modes[String(data.mode)] || modes.short;
+        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", {
+          messages: [
+            { role: "system", content: "You summarize documents. Use only the information in the text. Never add facts. Reply only in " + lang + ". " + mode },
+            { role: "user", content: text },
+          ],
+          max_tokens: 500,
+        });
+        return Response.json({ success: true, summary: String(result.response || "").trim() });
+      } catch (err) {
+        return Response.json({ success: false, error: "The summarizer is busy. Please try again." }, { status: 500 });
+      }
+    }
+
     // Protected PDF download
     if (
       url.pathname.startsWith("/api/download/") &&
