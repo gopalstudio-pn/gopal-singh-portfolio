@@ -140,6 +140,15 @@ export default function ToolsPage() {
           tag="NEW"
           delay={0.35}
         />
+        <Tool
+          href="/tools/summarizer"
+          icon="M5 4h14M5 9h14M5 14h9M5 19h6"
+          title="AI SUMMARIZER"
+          desc="Paste long text. Get a summary or key points in English, Nepali or Hindi."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>📄 → 3 lines</span>}
+          tag="NEW"
+          delay={0.4}
+        />
       </div>
 
       <p className="mt-14 text-center text-xs font-light text-white/40" style={mont}>

@@ -48,6 +48,11 @@ const SEO_PAGES: Record<string, SeoPage> = {
     desc: "Remove the background from any photo and download a transparent PNG. Free, private, runs on your device.",
     app: "DesignApplication",
   },
+  "/tools/summarizer": {
+    title: "AI Document Summarizer",
+    desc: "Paste any article or document and get a short summary, key points or a simple explanation in English, Nepali or Hindi. Free AI tool.",
+    app: "UtilitiesApplication",
+  },
   "/books": {
     title: "Library",
     desc: "Gopal Singh's library of books on money, habits, startups and personal growth.",
