@@ -149,6 +149,15 @@ export default function ToolsPage() {
           tag="NEW"
           delay={0.4}
         />
+        <Tool
+          href="/tools/rashifal"
+          icon="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"
+          title="DAILY RASHIFAL"
+          desc="Your daily reading in Nepali or English, plus the meaning of any name."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>♈ ♌ ♐ · राशिफल</span>}
+          tag="NEW"
+          delay={0.45}
+        />
       </div>
 
       <p className="mt-14 text-center text-xs font-light text-white/40" style={mont}>

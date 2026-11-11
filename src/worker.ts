@@ -53,6 +53,11 @@ const SEO_PAGES: Record<string, SeoPage> = {
     desc: "Paste any article or document and get a short summary, key points or a simple explanation in English, Nepali or Hindi. Free AI tool.",
     app: "UtilitiesApplication",
   },
+  "/tools/rashifal": {
+    title: "Daily Rashifal and Name Meaning",
+    desc: "Read your free daily rashifal in Nepali or English and find the meaning of any name. AI-written, for fun.",
+    app: "LifestyleApplication",
+  },
   "/books": {
     title: "Library",
     desc: "Gopal Singh's library of books on money, habits, startups and personal growth.",
@@ -235,6 +240,48 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
         return Response.json({ success: true, summary: String(result.response || "").trim() });
       } catch (err) {
         return Response.json({ success: false, error: "The summarizer is busy. Please try again." }, { status: 500 });
+      }
+    }
+
+        if (url.pathname === "/api/rashifal" && request.method === "GET") {
+      const sign = String(url.searchParams.get("sign") || "").toLowerCase();
+      const lang = String(url.searchParams.get("lang") || "ne") === "en" ? "en" : "ne";
+      const neNames: Record<string, string> = { mesh: "Aries (मेष)", vrish: "Taurus (वृष)", mithun: "Gemini (मिथुन)", kark: "Cancer (कर्क)", singh: "Leo (सिंह)", kanya: "Virgo (कन्या)", tula: "Libra (तुला)", vrishchik: "Scorpio (वृश्चिक)", dhanu: "Sagittarius (धनु)", makar: "Capricorn (मकर)", kumbh: "Aquarius (कुम्भ)", meen: "Pisces (मीन)" };
+      if (!neNames[sign]) return Response.json({ success: false, error: "Unknown sign." }, { status: 400 });
+      const langName = lang === "en" ? "English" : "Nepali in Devanagari script";
+      const today = new Date(Date.now() + 20700000).toISOString().slice(0, 10);
+      const cacheKey = new Request("https://pnsingh.com.np/cache/rashifal/" + today + "/" + sign + "/" + lang, { method: "GET" });
+      try {
+        const hit = await caches.default.match(cacheKey);
+        if (hit) return hit;
+      } catch {}
+      try {
+        const prompt = "Write today's daily horoscope for the zodiac sign " + neNames[sign] + ". Write in " + langName + ". Include: overall day, love, career or study, money, one lucky number and one lucky colour. Keep it warm, positive and under 120 words. Do not say you are an AI.";
+        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "user", content: prompt }], max_tokens: 400 });
+        const json = JSON.stringify({ success: true, sign, date: today, text: String(result.response || "").trim() });
+        try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=86400", "Content-Type": "application/json" } })); } catch {}
+        return new Response(json, { headers: { "Content-Type": "application/json" } });
+      } catch (err) {
+        return Response.json({ success: false, error: "Rashifal is busy. Please try again." }, { status: 500 });
+      }
+    }
+
+    if (url.pathname === "/api/name-meaning" && request.method === "GET") {
+      const name = String(url.searchParams.get("name") || "").trim().slice(0, 40);
+      if (!name || !/^[a-zA-Z\u0900-\u097F\s.']+$/.test(name)) return Response.json({ success: false, error: "Please enter a valid name." }, { status: 400 });
+      const cacheKey = new Request("https://pnsingh.com.np/cache/name-meaning/" + encodeURIComponent(name.toLowerCase()), { method: "GET" });
+      try {
+        const hit = await caches.default.match(cacheKey);
+        if (hit) return hit;
+      } catch {}
+      try {
+        const prompt = "Explain the name '" + name + "' in 3 short English sentences: 1) origin and meaning, 2) personality traits, 3) one positive note. If you are not sure about the meaning, say so honestly. Do not say you are an AI.";
+        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "user", content: prompt }], max_tokens: 200 });
+        const json = JSON.stringify({ success: true, name, text: String(result.response || "").trim() });
+        try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=2592000", "Content-Type": "application/json" } })); } catch {}
+        return new Response(json, { headers: { "Content-Type": "application/json" } });
+      } catch (err) {
+        return Response.json({ success: false, error: "Name meaning is busy. Please try again." }, { status: 500 });
       }
     }
 
