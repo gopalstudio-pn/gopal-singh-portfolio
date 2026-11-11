@@ -39,7 +39,7 @@ const SEO_PAGES: Record<string, SeoPage> = {
     app: "UtilitiesApplication",
   },
   "/tools/image-compressor": {
-    title: "Image Compressor   "/books": { Resizer",
+    title: "Image Compressor and Resizer",
     desc: "Compress and resize photos online. Make JPG or WebP images smaller without losing quality. Free, private, runs on your device.",
     app: "UtilitiesApplication",
   },
