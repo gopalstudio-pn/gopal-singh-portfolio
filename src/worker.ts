@@ -43,6 +43,11 @@ const SEO_PAGES: Record<string, SeoPage> = {
     desc: "Compress and resize photos online. Make JPG or WebP images smaller without losing quality. Free, private, runs on your device.",
     app: "UtilitiesApplication",
   },
+  "/tools/background-remover": {
+    title: "AI Background Remover",
+    desc: "Remove the background from any photo and download a transparent PNG. Free, private, runs on your device.",
+    app: "DesignApplication",
+  },
   "/books": {
     title: "Library",
     desc: "Gopal Singh's library of books on money, habits, startups and personal growth.",

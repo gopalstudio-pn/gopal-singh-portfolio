@@ -131,6 +131,15 @@ export default function ToolsPage() {
           tag="NEW"
           delay={0.3}
         />
+        <Tool
+          href="/tools/background-remover"
+          icon="M12 3a4 4 0 100 8 4 4 0 000-8zM4 21c0-4 4-6 8-6s8 2 8 6"
+          title="BACKGROUND REMOVER"
+          desc="Remove the background from any photo. Transparent PNG, private."
+          preview={<span className="block text-2xl text-[#EAD8C7]" style={mont}>✂ AI · PNG</span>}
+          tag="NEW"
+          delay={0.35}
+        />
       </div>
 
       <p className="mt-14 text-center text-xs font-light text-white/40" style={mont}>
