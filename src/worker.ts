@@ -249,18 +249,18 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
       const R: Record<string, { ne: string; en: string }> = { mesh: { ne: "मेष", en: "Aries" }, vrish: { ne: "वृष", en: "Taurus" }, mithun: { ne: "मिथुन", en: "Gemini" }, kark: { ne: "कर्कट", en: "Cancer" }, singh: { ne: "सिंह", en: "Leo" }, kanya: { ne: "कन्या", en: "Virgo" }, tula: { ne: "तुला", en: "Libra" }, vrishchik: { ne: "वृश्चिक", en: "Scorpio" }, dhanu: { ne: "धनु", en: "Sagittarius" }, makar: { ne: "मकर", en: "Capricorn" }, kumbh: { ne: "कुम्भ", en: "Aquarius" }, meen: { ne: "मीन", en: "Pisces" } };
       if (!R[sign]) return Response.json({ success: false, error: "Unknown sign." }, { status: 400 });
       const today = new Date(Date.now() + 20700000).toISOString().slice(0, 10);
-      const cacheKey = new Request("https://pnsingh.com.np/cache/rashifal/v2/" + today + "/" + sign + "/" + lang, { method: "GET" });
+      const cacheKey = new Request("https://pnsingh.com.np/cache/rashifal/v3/" + today + "/" + sign + "/" + lang, { method: "GET" });
       try {
         const hit = await caches.default.match(cacheKey);
         if (hit) return hit;
       } catch {}
       try {
-        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, गर्नुहोस्, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, आपका, और, में, से, लिए, बहुत, अच्छा, मिलेगा, रहेगा, करें। आफू एआई हो भनेर नभन्नुहोस्।";
+        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, गर्नुहोस्, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, आपका, और, में, से, लिए, बहुत, अच्छा, मिलेगा, रहेगा, करें। तुम्हारा, तुम्हारे, तुम्हारी, मेहनत, हुने हो जस्ता हिन्दी शब्द कहिल्यै नलेख्नुहोस्। सधैं तपाईं र तपाईंको प्रयोग गर्नुहोस्। उदाहरण: आज तपाईंको दिन राम्रो हुनेछ। कामकाजमा सफलता मिल्नेछ। परिश्रमले फल दिनेछ। आफू एआई हो भनेर नभन्नुहोस्।";
         const enRules = "You write short, warm daily horoscopes in simple English. Never mention being an AI.";
         const prompt = lang === "en"
           ? "Write today's horoscope for " + R[sign].en + ". Include: overall day, love, career or study, money, one lucky number and one lucky colour. Positive tone, under 100 words."
           : R[sign].ne + " राशिको आजको दैनिक राशिफल लेख्नुहोस्। यी कुरा समावेश गर्नुहोस्: आजको दिन, प्रेम, काम वा अध्ययन, पैसा, एउटा शुभ अङ्क र एउटा शुभ रङ। सकारात्मक र न्यानो शैलीमा, १०० शब्दभन्दा कम।";
-        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 400, temperature: 0.5 });
+        const result: any = await (env.AI as any).run(lang === "en" ? "@cf/meta/llama-3.1-8b-instruct-fp8-fast" : "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 400, temperature: 0.5 });
         const json = JSON.stringify({ success: true, sign, date: today, text: String(result.response || "").trim() });
         try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=86400", "Content-Type": "application/json" } })); } catch {}
         return new Response(json, { headers: { "Content-Type": "application/json" } });
@@ -316,18 +316,18 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
         return null;
       };
       const rashi = rashiOf(name);
-      const cacheKey = new Request("https://pnsingh.com.np/cache/name-meaning/v2/" + lang + "/" + encodeURIComponent(name.toLowerCase()), { method: "GET" });
+      const cacheKey = new Request("https://pnsingh.com.np/cache/name-meaning/v3/" + lang + "/" + encodeURIComponent(name.toLowerCase()), { method: "GET" });
       try {
         const hit = await caches.default.match(cacheKey);
         if (hit) return hit;
       } catch {}
       try {
-        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, और, में, से, लिए, बहुत, अच्छा। आफू एआई हो भनेर नभन्नुहोस्।";
+        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, और, में, से, लिए, बहुत, अच्छा। तुम्हारा, तुम्हारे, तुम्हारी, मेहनत, हुने हो जस्ता हिन्दी शब्द कहिल्यै नलेख्नुहोस्। सधैं तपाईं र तपाईंको प्रयोग गर्नुहोस्। उदाहरण: आज तपाईंको दिन राम्रो हुनेछ। कामकाजमा सफलता मिल्नेछ। परिश्रमले फल दिनेछ। आफू एआई हो भनेर नभन्नुहोस्।";
         const enRules = "You explain names in simple, warm English. Never mention being an AI.";
         const prompt = lang === "en"
           ? "Explain the name '" + name + "' in 3 short sentences: 1) origin and meaning, 2) personality traits, 3) one positive note. If you are not sure about the meaning, say so honestly."
           : "'" + name + "' नामको अर्थ ३ छोटा वाक्यमा लेख्नुहोस्: १) उत्पत्ति र अर्थ, २) स्वभाव, ३) एउटा सकारात्मक कुरा। अर्थ पक्का थाहा छैन भने इमान्दारीसँग भन्नुहोस्।";
-        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 300, temperature: 0.5 });
+        const result: any = await (env.AI as any).run(lang === "en" ? "@cf/meta/llama-3.1-8b-instruct-fp8-fast" : "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 300, temperature: 0.5 });
         const json = JSON.stringify({ success: true, name, lang, text: String(result.response || "").trim(), rashi: rashi, rashiNe: rashi ? R[rashi].ne : null, rashiEn: rashi ? R[rashi].en : null });
         try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=2592000", "Content-Type": "application/json" } })); } catch {}
         return new Response(json, { headers: { "Content-Type": "application/json" } });
