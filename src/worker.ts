@@ -246,18 +246,21 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
         if (url.pathname === "/api/rashifal" && request.method === "GET") {
       const sign = String(url.searchParams.get("sign") || "").toLowerCase();
       const lang = String(url.searchParams.get("lang") || "ne") === "en" ? "en" : "ne";
-      const neNames: Record<string, string> = { mesh: "Aries (मेष)", vrish: "Taurus (वृष)", mithun: "Gemini (मिथुन)", kark: "Cancer (कर्क)", singh: "Leo (सिंह)", kanya: "Virgo (कन्या)", tula: "Libra (तुला)", vrishchik: "Scorpio (वृश्चिक)", dhanu: "Sagittarius (धनु)", makar: "Capricorn (मकर)", kumbh: "Aquarius (कुम्भ)", meen: "Pisces (मीन)" };
-      if (!neNames[sign]) return Response.json({ success: false, error: "Unknown sign." }, { status: 400 });
-      const langName = lang === "en" ? "English" : "Nepali in Devanagari script";
+      const R: Record<string, { ne: string; en: string }> = { mesh: { ne: "मेष", en: "Aries" }, vrish: { ne: "वृष", en: "Taurus" }, mithun: { ne: "मिथुन", en: "Gemini" }, kark: { ne: "कर्कट", en: "Cancer" }, singh: { ne: "सिंह", en: "Leo" }, kanya: { ne: "कन्या", en: "Virgo" }, tula: { ne: "तुला", en: "Libra" }, vrishchik: { ne: "वृश्चिक", en: "Scorpio" }, dhanu: { ne: "धनु", en: "Sagittarius" }, makar: { ne: "मकर", en: "Capricorn" }, kumbh: { ne: "कुम्भ", en: "Aquarius" }, meen: { ne: "मीन", en: "Pisces" } };
+      if (!R[sign]) return Response.json({ success: false, error: "Unknown sign." }, { status: 400 });
       const today = new Date(Date.now() + 20700000).toISOString().slice(0, 10);
-      const cacheKey = new Request("https://pnsingh.com.np/cache/rashifal/" + today + "/" + sign + "/" + lang, { method: "GET" });
+      const cacheKey = new Request("https://pnsingh.com.np/cache/rashifal/v2/" + today + "/" + sign + "/" + lang, { method: "GET" });
       try {
         const hit = await caches.default.match(cacheKey);
         if (hit) return hit;
       } catch {}
       try {
-        const prompt = "Write today's daily horoscope for the zodiac sign " + neNames[sign] + ". Write in " + langName + ". Include: overall day, love, career or study, money, one lucky number and one lucky colour. Keep it warm, positive and under 120 words. Do not say you are an AI.";
-        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "user", content: prompt }], max_tokens: 400 });
+        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, गर्नुहोस्, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, आपका, और, में, से, लिए, बहुत, अच्छा, मिलेगा, रहेगा, करें। आफू एआई हो भनेर नभन्नुहोस्।";
+        const enRules = "You write short, warm daily horoscopes in simple English. Never mention being an AI.";
+        const prompt = lang === "en"
+          ? "Write today's horoscope for " + R[sign].en + ". Include: overall day, love, career or study, money, one lucky number and one lucky colour. Positive tone, under 100 words."
+          : R[sign].ne + " राशिको आजको दैनिक राशिफल लेख्नुहोस्। यी कुरा समावेश गर्नुहोस्: आजको दिन, प्रेम, काम वा अध्ययन, पैसा, एउटा शुभ अङ्क र एउटा शुभ रङ। सकारात्मक र न्यानो शैलीमा, १०० शब्दभन्दा कम।";
+        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 400, temperature: 0.5 });
         const json = JSON.stringify({ success: true, sign, date: today, text: String(result.response || "").trim() });
         try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=86400", "Content-Type": "application/json" } })); } catch {}
         return new Response(json, { headers: { "Content-Type": "application/json" } });
@@ -268,16 +271,64 @@ if (url.pathname === "/api/generate" && request.method === "POST") {
 
     if (url.pathname === "/api/name-meaning" && request.method === "GET") {
       const name = String(url.searchParams.get("name") || "").trim().slice(0, 40);
+      const lang = String(url.searchParams.get("lang") || "ne") === "en" ? "en" : "ne";
       if (!name || !/^[a-zA-Z\u0900-\u097F\s.']+$/.test(name)) return Response.json({ success: false, error: "Please enter a valid name." }, { status: 400 });
-      const cacheKey = new Request("https://pnsingh.com.np/cache/name-meaning/" + encodeURIComponent(name.toLowerCase()), { method: "GET" });
+      const R: Record<string, { ne: string; en: string }> = { mesh: { ne: "मेष", en: "Aries" }, vrish: { ne: "वृष", en: "Taurus" }, mithun: { ne: "मिथुन", en: "Gemini" }, kark: { ne: "कर्कट", en: "Cancer" }, singh: { ne: "सिंह", en: "Leo" }, kanya: { ne: "कन्या", en: "Virgo" }, tula: { ne: "तुला", en: "Libra" }, vrishchik: { ne: "वृश्चिक", en: "Scorpio" }, dhanu: { ne: "धनु", en: "Sagittarius" }, makar: { ne: "मकर", en: "Capricorn" }, kumbh: { ne: "कुम्भ", en: "Aquarius" }, meen: { ne: "मीन", en: "Pisces" } };
+      const RULES: [string, string, string][] = [
+        ["च", "ueo", "mesh"], ["च", "ai", "meen"], ["ल", "aiueo", "mesh"], ["अ", "a", "mesh"], ["अ", "iueo", "vrish"],
+        ["वब", "aiueo", "vrish"], ["कघङछ", "aiueo", "mithun"], ["ह", "a", "mithun"], ["ह", "iueo", "kark"], ["ड", "aiueo", "kark"],
+        ["म", "aiueo", "singh"], ["ट", "aiue", "singh"], ["ट", "o", "kanya"], ["पषशणठ", "aiueo", "kanya"],
+        ["र", "aiueo", "tula"], ["त", "aiue", "tula"], ["त", "o", "vrishchik"], ["न", "aiueo", "vrishchik"],
+        ["य", "aiu", "vrishchik"], ["य", "eo", "dhanu"], ["भ", "aiue", "dhanu"], ["भ", "o", "makar"], ["धफढ", "aiueo", "dhanu"],
+        ["जख", "aiueo", "makar"], ["ग", "ai", "makar"], ["ग", "ueo", "kumbh"], ["स", "aiueo", "kumbh"],
+        ["द", "a", "kumbh"], ["द", "iueo", "meen"], ["थझञ", "aiueo", "meen"],
+      ];
+      const rashiOf = (n: string): string | null => {
+        const w = n.trim().split(/\s+/)[0] || "";
+        let cons = "";
+        let v = "a";
+        if (/[\u0900-\u097F]/.test(w)) {
+          const ind: Record<string, string> = { "अ": "a", "आ": "a", "इ": "i", "ई": "i", "उ": "u", "ऊ": "u", "ए": "e", "ऐ": "e", "ओ": "o", "औ": "o" };
+          const mat: Record<string, string> = { "\u093E": "a", "\u093F": "i", "\u0940": "i", "\u0941": "u", "\u0942": "u", "\u0947": "e", "\u0948": "e", "\u094B": "o", "\u094C": "o" };
+          if (ind[w[0]]) { cons = "अ"; v = ind[w[0]]; }
+          else { cons = w[0] || ""; let m = w[1] || ""; if (m === "\u093C") m = w[2] || ""; v = mat[m] || "a"; }
+        } else {
+          const s = w.toLowerCase().replace(/[^a-z]/g, "");
+          if (!s) return null;
+          const V = "aeiou";
+          if (V.indexOf(s[0]) >= 0) { cons = "अ"; v = s[0]; }
+          else {
+            const di: Record<string, string> = { chh: "छ", ch: "च", kh: "ख", gh: "घ", bh: "भ", dh: "ध", ph: "फ", th: "थ", jh: "झ", sh: "श", ng: "ङ" };
+            const si: Record<string, string> = { b: "ब", c: "क", d: "द", f: "फ", g: "ग", h: "ह", j: "ज", k: "क", l: "ल", m: "म", n: "न", p: "प", q: "क", r: "र", s: "स", t: "त", v: "व", w: "व", x: "क", y: "य", z: "ज" };
+            let len = 1;
+            for (const d of ["chh", "ch", "kh", "gh", "bh", "dh", "ph", "th", "jh", "sh", "ng"]) {
+              if (s.indexOf(d) === 0) { cons = di[d]; len = d.length; break; }
+            }
+            if (!cons) cons = si[s[0]] || "";
+            const nx = s[len] || "";
+            v = nx && V.indexOf(nx) >= 0 ? nx : "a";
+          }
+        }
+        if (!cons) return null;
+        for (const r of RULES) {
+          if (r[0].indexOf(cons) >= 0 && r[1].indexOf(v) >= 0) return r[2];
+        }
+        return null;
+      };
+      const rashi = rashiOf(name);
+      const cacheKey = new Request("https://pnsingh.com.np/cache/name-meaning/v2/" + lang + "/" + encodeURIComponent(name.toLowerCase()), { method: "GET" });
       try {
         const hit = await caches.default.match(cacheKey);
         if (hit) return hit;
       } catch {}
       try {
-        const prompt = "Explain the name '" + name + "' in 3 short English sentences: 1) origin and meaning, 2) personality traits, 3) one positive note. If you are not sure about the meaning, say so honestly. Do not say you are an AI.";
-        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "user", content: prompt }], max_tokens: 200 });
-        const json = JSON.stringify({ success: true, name, text: String(result.response || "").trim() });
+        const neRules = "तपाईं शुद्ध नेपाली भाषामा मात्र लेख्नुहोस्, नेपालमा बोलिने र लेखिने शैलीमा। हिन्दी शब्द वा हिन्दी व्याकरण कहिल्यै प्रयोग नगर्नुहोस्। यी प्रयोग गर्नुहोस्: छ, हुन्छ, हुनेछ, तपाईं, धेरै, राम्रो, लागि, मा, को, ले, र। यी प्रयोग नगर्नुहोस्: है, हैं, होगा, आप, और, में, से, लिए, बहुत, अच्छा। आफू एआई हो भनेर नभन्नुहोस्।";
+        const enRules = "You explain names in simple, warm English. Never mention being an AI.";
+        const prompt = lang === "en"
+          ? "Explain the name '" + name + "' in 3 short sentences: 1) origin and meaning, 2) personality traits, 3) one positive note. If you are not sure about the meaning, say so honestly."
+          : "'" + name + "' नामको अर्थ ३ छोटा वाक्यमा लेख्नुहोस्: १) उत्पत्ति र अर्थ, २) स्वभाव, ३) एउटा सकारात्मक कुरा। अर्थ पक्का थाहा छैन भने इमान्दारीसँग भन्नुहोस्।";
+        const result: any = await (env.AI as any).run("@cf/meta/llama-3.1-8b-instruct-fp8-fast", { messages: [{ role: "system", content: lang === "en" ? enRules : neRules }, { role: "user", content: prompt }], max_tokens: 300, temperature: 0.5 });
+        const json = JSON.stringify({ success: true, name, lang, text: String(result.response || "").trim(), rashi: rashi, rashiNe: rashi ? R[rashi].ne : null, rashiEn: rashi ? R[rashi].en : null });
         try { await caches.default.put(cacheKey, new Response(json, { headers: { "Cache-Control": "public, max-age=2592000", "Content-Type": "application/json" } })); } catch {}
         return new Response(json, { headers: { "Content-Type": "application/json" } });
       } catch (err) {

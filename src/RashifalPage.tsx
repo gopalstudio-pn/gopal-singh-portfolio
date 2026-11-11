@@ -4,11 +4,13 @@ import { ToolShell } from './components/ToolShell';
 const mont = { fontFamily: "'Montserrat', sans-serif" } as const;
 const bebas = { fontFamily: "'Bebas Neue', sans-serif" } as const;
 
+type Lang = 'ne' | 'en';
+
 const SIGNS = [
   { id: 'mesh', ne: 'मेष', en: 'Aries', s: '♈' },
   { id: 'vrish', ne: 'वृष', en: 'Taurus', s: '♉' },
   { id: 'mithun', ne: 'मिथुन', en: 'Gemini', s: '♊' },
-  { id: 'kark', ne: 'कर्क', en: 'Cancer', s: '♋' },
+  { id: 'kark', ne: 'कर्कट', en: 'Cancer', s: '♋' },
   { id: 'singh', ne: 'सिंह', en: 'Leo', s: '♌' },
   { id: 'kanya', ne: 'कन्या', en: 'Virgo', s: '♍' },
   { id: 'tula', ne: 'तुला', en: 'Libra', s: '♎' },
@@ -20,19 +22,25 @@ const SIGNS = [
 ];
 
 export default function RashifalPage() {
-  const [lang, setLang] = useState<'ne' | 'en'>('ne');
+  const [lang, setLang] = useState<Lang>('ne');
   const [sign, setSign] = useState('');
   const [text, setText] = useState('');
   const [date, setDate] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
+  const [nameLang, setNameLang] = useState<Lang>('ne');
   const [name, setName] = useState('');
+  const [found, setFound] = useState('');
   const [meaning, setMeaning] = useState('');
   const [nameBusy, setNameBusy] = useState(false);
   const [nameError, setNameError] = useState('');
+  const [nameRashi, setNameRashi] = useState('');
+  const [nameRashiText, setNameRashiText] = useState('');
+  const [nameRashiDate, setNameRashiDate] = useState('');
+  const [nameRashiBusy, setNameRashiBusy] = useState(false);
 
-  const load = async (id: string, l: 'ne' | 'en') => {
+  const load = async (id: string, l: Lang) => {
     setSign(id);
     setBusy(true);
     setError('');
@@ -50,24 +58,53 @@ export default function RashifalPage() {
     setBusy(false);
   };
 
-  const changeLang = (l: 'ne' | 'en') => {
+  const changeLang = (l: Lang) => {
     setLang(l);
     if (sign) load(sign, l);
   };
 
-  const findName = async () => {
+  const loadNameRashifal = async (id: string, l: Lang) => {
+    setNameRashiBusy(true);
+    setNameRashiText('');
+    try {
+      const res = await fetch('/api/rashifal?sign=' + id + '&lang=' + l);
+      const data: any = await res.json();
+      if (data.success) {
+        setNameRashiText(data.text);
+        setNameRashiDate(data.date);
+      }
+    } catch {}
+    setNameRashiBusy(false);
+  };
+
+  const findName = async (l: Lang) => {
+    const q = name.trim();
+    if (q.length < 2 || nameBusy) return;
     setNameBusy(true);
     setNameError('');
     setMeaning('');
+    setNameRashi('');
+    setNameRashiText('');
     try {
-      const res = await fetch('/api/name-meaning?name=' + encodeURIComponent(name.trim()));
+      const res = await fetch('/api/name-meaning?name=' + encodeURIComponent(q) + '&lang=' + l);
       const data: any = await res.json();
-      if (data.success) setMeaning(data.text);
-      else setNameError(data.error || 'Something went wrong.');
+      if (data.success) {
+        setFound(data.name);
+        setMeaning(data.text);
+        if (data.rashi) {
+          setNameRashi(data.rashi);
+          void loadNameRashifal(data.rashi, l);
+        }
+      } else setNameError(data.error || 'Something went wrong.');
     } catch {
       setNameError('Network problem. Please try again.');
     }
     setNameBusy(false);
+  };
+
+  const changeNameLang = (l: Lang) => {
+    setNameLang(l);
+    if (meaning) findName(l);
   };
 
   const chip = (on: boolean) =>
@@ -75,6 +112,7 @@ export default function RashifalPage() {
     (on ? 'border-[#D4AF37] text-[#D4AF37]' : 'border-[#8C6D4F]/50 text-[#EAD8C7] hover:border-[#D4AF37]');
 
   const current = SIGNS.find((x) => x.id === sign);
+  const nameSign = SIGNS.find((x) => x.id === nameRashi);
 
   return (
     <ToolShell
@@ -121,23 +159,53 @@ export default function RashifalPage() {
         ) : null}
 
         <div className="border border-[#8C6D4F]/40 bg-white/[0.02] p-5 sm:p-6">
-          <label htmlFor="nm" className="text-[10px] tracking-[0.3em] text-[#C9A66B]">NAME MEANING</label>
+          <label htmlFor="nm" className="text-[10px] tracking-[0.3em] text-[#C9A66B]">NAME MEANING + RASHI</label>
+          <div className="mt-3 flex gap-2">
+            <button type="button" onClick={() => changeNameLang('ne')} className={chip(nameLang === 'ne')} style={{ cursor: 'pointer' }}>नेपाली</button>
+            <button type="button" onClick={() => changeNameLang('en')} className={chip(nameLang === 'en')} style={{ cursor: 'pointer' }}>English</button>
+          </div>
           <input
             id="nm"
             value={name}
             onChange={(e) => setName(e.target.value.slice(0, 40))}
-            placeholder="Type any name, e.g. Gopal"
-            className="mt-3 w-full border-b border-[#8C6D4F]/50 bg-transparent pb-2 text-2xl text-[#EAD8C7] outline-none focus:border-[#D4AF37]"
+            onKeyDown={(e) => { if (e.key === 'Enter') findName(nameLang); }}
+            placeholder="Type any name, e.g. Gopal or गोपाल"
+            className="mt-5 w-full border-b border-[#8C6D4F]/50 bg-transparent pb-2 text-2xl text-[#EAD8C7] outline-none focus:border-[#D4AF37]"
           />
-          <button type="button" onClick={findName} disabled={nameBusy || name.trim().length < 2} className={chip(false) + ' mt-5 disabled:opacity-40'} style={{ cursor: 'pointer' }}>
+          <button type="button" onClick={() => findName(nameLang)} disabled={nameBusy || name.trim().length < 2} className={chip(false) + ' mt-5 disabled:opacity-40'} style={{ cursor: 'pointer' }}>
             {nameBusy ? 'THINKING…' : 'FIND MEANING'}
           </button>
           {nameError ? <p className="mt-4 text-sm text-red-300/80">{nameError}</p> : null}
+
           {meaning ? (
-            <>
-              <p className="mt-5 whitespace-pre-wrap text-base leading-relaxed text-[#EAD8C7]">{meaning}</p>
-              <p className="mt-3 text-xs text-white/35">AI can be wrong about name origins. Treat it as a fun guide.</p>
-            </>
+            <div className="mt-6 space-y-5">
+              <div>
+                <p className="text-[10px] tracking-[0.3em] text-[#C9A66B]">MEANING · {found}</p>
+                <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-[#EAD8C7]">{meaning}</p>
+              </div>
+
+              {nameSign ? (
+                <div className="border-t border-[#8C6D4F]/30 pt-5">
+                  <p className="text-[10px] tracking-[0.3em] text-[#C9A66B]">RASHI FROM NAME</p>
+                  <p className="mt-3 text-xl text-[#EAD8C7]">
+                    <span className="mr-2 text-2xl">{nameSign.s}</span>
+                    {nameSign.ne} · {nameSign.en}
+                  </p>
+                  <p className="mt-2 text-xs text-white/35">Based on the first letter of the name (traditional naam-akshar method). Your birth-chart rashi may be different.</p>
+                  {nameRashiBusy ? <p className="mt-4 text-sm text-[#C9A66B]">Reading the stars…</p> : null}
+                  {nameRashiText ? (
+                    <>
+                      <p className="mt-5 text-[10px] tracking-[0.3em] text-[#C9A66B]">TODAY&apos;S RASHIFAL · {nameRashiDate}</p>
+                      <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-[#EAD8C7]">{nameRashiText}</p>
+                    </>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="text-xs text-white/35">Could not work out a rashi from this name.</p>
+              )}
+
+              <p className="text-xs text-white/35">AI can be wrong about name origins. Treat it as a fun guide.</p>
+            </div>
           ) : null}
         </div>
       </div>
